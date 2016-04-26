@@ -1,6 +1,6 @@
-package mylesson.activity;
+package xziar.mylesson.activity;
 
-import com.example.mylesson.R;
+import xziar.mylesson.R;
 
 import android.app.Activity;
 import android.content.Context;

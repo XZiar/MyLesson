@@ -1,12 +1,13 @@
 /**
  * @author XZiar
  */
-package mylesson.lessonview;
+package xziar.mylesson.lessonview;
 
 import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -16,16 +17,18 @@ import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.Log;
 import android.view.View;
-import mylesson.util.SizeUtil;
+import xziar.mylesson.util.SizeUtil;
 
 @SuppressLint("ClickableViewAccessibility")
 public class TimeTableView extends View
 {
 	private int viewWidth, viewHeight, width, height;
 	private float blkPadX, blkPadY;
+	private boolean isReBuf = true;
 
+	protected Bitmap bufBM = null;
+	protected Canvas bufCV = null;
 	protected Paint paintLine = new Paint(Paint.ANTI_ALIAS_FLAG);
-	protected Paint paintBG = new Paint(Paint.ANTI_ALIAS_FLAG);
 	protected Paint paintBlk = new Paint(Paint.ANTI_ALIAS_FLAG);
 	protected TextPaint paintTxt = new TextPaint(Paint.ANTI_ALIAS_FLAG);
 
@@ -43,6 +46,7 @@ public class TimeTableView extends View
 	{
 		super(context);
 
+		setLayerType(View.LAYER_TYPE_HARDWARE, null);
 		setClickable(true);
 
 		Log.v("tester", "TimeTable initialize");
@@ -55,7 +59,6 @@ public class TimeTableView extends View
 		paintLine.setColor(Color.LTGRAY);
 		paintLine.setStrokeWidth(1.0f);
 		paintLine.setStyle(Style.STROKE);
-		paintBG.setColor(0xffdde2e7);
 		paintTxt.setTextSize(width * 0.24f);
 		paintTxt.setColor(Color.WHITE);
 
@@ -69,26 +72,45 @@ public class TimeTableView extends View
 		Log.v("tester", "TTV onMeasure " + viewWidth + "," + viewHeight);
 	}
 
-	@Override
-	protected void onDraw(Canvas canvas)
+	protected void bufferDraw()
 	{
-		// super.onDraw(canvas);
-		int w = canvas.getWidth(), h = canvas.getHeight();
-		Log.v("tester", "TTV draw " + w + "," + h);
+		if (bufCV == null || bufBM == null || bufBM.getWidth() != viewWidth
+				|| bufBM.getHeight() != viewHeight)
+		{
+			bufBM = Bitmap.createBitmap(viewWidth, viewHeight,
+					Bitmap.Config.ARGB_8888);
+			bufCV = new Canvas(bufBM);
+		}
+		
+		Log.v("tester", "TTV bufDraw");
+		
+		bufCV.clipRect(0, 0, viewWidth, viewHeight);
+		bufCV.drawColor(0xffdde2e7);
 
-		canvas.drawRect(0, 0, viewWidth, viewHeight, paintBG);
-
+		for (LessonBlock lb : lessons)
+		{
+			drawBlock(bufCV, lb);
+		}
 		float baseY = 0;
 		for (int a = 0; a < 12; a++)
 		{
 			baseY += height;
-			canvas.drawLine(0, baseY, viewWidth, baseY, paintLine);
+			bufCV.drawLine(0, baseY, viewWidth, baseY, paintLine);
 		}
+		isReBuf = false;
+	}
 
-		for (LessonBlock lb : lessons)
-		{
-			drawBlock(canvas, lb);
-		}
+	@Override
+	protected void onDraw(Canvas canvas)
+	{
+		Log.v("tester", "TTV HW:" + canvas.isHardwareAccelerated());
+		// super.onDraw(canvas);
+		int w = canvas.getWidth(), h = canvas.getHeight();
+		Log.v("tester", "TTV draw " + w + "," + h);
+
+		if(isReBuf)
+			bufferDraw();
+		canvas.drawBitmap(bufBM, 0, 0, null);
 
 	}
 

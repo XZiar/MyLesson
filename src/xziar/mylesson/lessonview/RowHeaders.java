@@ -1,7 +1,7 @@
 /**
  * @author XZiar
  */
-package mylesson.lessonview;
+package xziar.mylesson.lessonview;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,7 +12,7 @@ import android.graphics.Paint.Style;
 import android.util.Log;
 import android.graphics.Typeface;
 import android.view.View;
-import mylesson.util.SizeUtil;
+import xziar.mylesson.util.SizeUtil;
 
 public class RowHeaders extends View
 {
@@ -23,7 +23,6 @@ public class RowHeaders extends View
 	protected Paint paintTime = new Paint(Paint.ANTI_ALIAS_FLAG);
 	protected Paint paintCnt = new Paint(Paint.ANTI_ALIAS_FLAG);
 	protected Paint paintLine = new Paint(Paint.ANTI_ALIAS_FLAG);
-	protected Paint paintBG = new Paint(Paint.ANTI_ALIAS_FLAG);
 
 	private int viewWidth, viewHeight, width, height;// in px
 
@@ -55,7 +54,6 @@ public class RowHeaders extends View
 		paintLine.setColor(Color.LTGRAY);
 		paintLine.setStrokeWidth(1.0f);
 		paintLine.setStyle(Style.STROKE);
-		paintBG.setColor(0xffdde2e7);
 	}
 
 	@Override
@@ -79,7 +77,7 @@ public class RowHeaders extends View
 		float baselineCnt = (height * 4 / 3 - fontMetrics.top
 				- fontMetrics.bottom) / 2f;
 
-		canvas.drawRect(0, 0, viewWidth, viewHeight, paintBG);
+		canvas.drawColor(0xffdde2e7);
 		
 		float baseX = width / 2f, baseY = 0;
 		for (Integer a = 0; a < times.length;)

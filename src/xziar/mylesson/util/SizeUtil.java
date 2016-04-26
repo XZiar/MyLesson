@@ -1,7 +1,7 @@
-package mylesson.util;
+package xziar.mylesson.util;
 
 import android.util.Log;
-import mylesson.activity.MainActivity;
+import xziar.mylesson.activity.MainActivity;
 
 public class SizeUtil
 {

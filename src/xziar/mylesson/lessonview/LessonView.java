@@ -1,4 +1,4 @@
-package mylesson.lessonview;
+package xziar.mylesson.lessonview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -11,7 +11,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
-import mylesson.data.LessonBean;
+import xziar.mylesson.data.LessonBean;
 
 public class LessonView extends ViewGroup
 {

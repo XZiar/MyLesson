@@ -1,7 +1,7 @@
 /**
  * @author XZiar
  */
-package mylesson.lessonview;
+package xziar.mylesson.lessonview;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,7 +10,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.FontMetricsInt;
 import android.util.Log;
 import android.view.View;
-import mylesson.util.SizeUtil;
+import xziar.mylesson.util.SizeUtil;
 
 public class ColumnHeaders extends View
 {
