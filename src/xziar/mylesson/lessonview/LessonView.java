@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import xziar.mylesson.data.LessonBean;
+import xziar.mylesson.util.SizeUtil;
 
 public class LessonView extends ViewGroup
 {
@@ -24,8 +25,8 @@ public class LessonView extends ViewGroup
 	int bgColor = 0xfff7f7f7;
 	private Rect rectRH = new Rect(), rectCH = new Rect(), rectTTV = new Rect();
 	private Rect loRH = new Rect(), loCH = new Rect(), loTTV = new Rect();
-	private int offsetX = 0, offsetY = 0, moveX, moveY, lastX, lastY;
-	private int locTX, locTY, maxDX, maxDY;
+	private int offsetX = 0, offsetY = 0, moveX = -1, moveY = -1, lastX, lastY;
+	private int locTX, locTY, maxDX, maxDY, dDis;
 	private boolean isTTV = false, isMoved = false;
 	private View objTouch;
 
@@ -49,6 +50,7 @@ public class LessonView extends ViewGroup
 	private void init(Context context)
 	{
 		final int blkSize = 56;
+		dDis = SizeUtil.dp2px(blkSize) / 10;
 		rowH = new RowHeaders(context, 38, blkSize);
 		colH = new ColumnHeaders(context, blkSize, 44);
 		ttv = new TimeTableView(context, blkSize);
@@ -95,6 +97,10 @@ public class LessonView extends ViewGroup
 		loRH.offset(0, moveY);
 		loCH.set(rectCH);
 		loCH.offset(moveX, 0);
+		
+		ttv.layout(loTTV.left, loTTV.top, loTTV.right, loTTV.bottom);
+		rowH.layout(loRH.left, loRH.top, loRH.right, loRH.bottom);
+		colH.layout(loCH.left, loCH.top, loCH.right, loCH.bottom);
 		return true;
 	}
 
@@ -130,7 +136,7 @@ public class LessonView extends ViewGroup
 
 		maxDX = getWidth() - rectTTV.right;
 		maxDY = getHeight() - rectTTV.bottom;
-
+		Log.v("tester", "LessonView : " + getWidth() + "," + getHeight());
 	}
 
 	@Override
@@ -139,22 +145,13 @@ public class LessonView extends ViewGroup
 	{
 		Log.v("tester", "LessonView onLayout");
 		scrollElement(0, 0);
-
-		Log.v("tester", "loTTV:" + loTTV);
-		ttv.layout(loTTV.left, loTTV.top, loTTV.right, loTTV.bottom);
-
-		Log.v("tester", "loRH:" + loRH);
-		rowH.layout(loRH.left, loRH.top, loRH.right, loRH.bottom);
-
-		Log.v("tester", "loCH:" + loCH);
-		colH.layout(loCH.left, loCH.top, loCH.right, loCH.bottom);
 	}
 
 	@Override
 	protected void dispatchDraw(Canvas canvas)
 	{
-		//Log.v("tester", "LessonView dispatchDraw");
-		
+		// Log.v("tester", "LessonView dispatchDraw");
+
 		canvas.save();
 		canvas.clipRect(rectTTV);
 		canvas.translate(loTTV.left, loTTV.top);
@@ -194,19 +191,17 @@ public class LessonView extends ViewGroup
 			if (rectTTV.contains(locTX, locTY))
 			{
 				objTouch = ttv;
-				ttv.onTouchEvent(e);
 				isTTV = true;
 			}
 			else if (rectRH.contains(locTX, locTY))
 			{
 				objTouch = rowH;
-				rowH.onTouchEvent(e);
 			}
 			else if (rectCH.contains(locTX, locTY))
 			{
 				objTouch = colH;
-				colH.onTouchEvent(e);
 			}
+			objTouch.dispatchTouchEvent(e);
 			Log.v("tester", "Touch_Down at " + locTX + "," + locTY);
 			break;
 		case MotionEvent.ACTION_MOVE:
@@ -215,7 +210,9 @@ public class LessonView extends ViewGroup
 			break;
 		case MotionEvent.ACTION_UP:
 			if (!isMoved)
-				objTouch.onTouchEvent(e);
+			{
+				objTouch.dispatchTouchEvent(e);
+			}
 			else if (isTTV)
 				onTouchEvent(e);
 			break;
@@ -235,7 +232,7 @@ public class LessonView extends ViewGroup
 			int dx = (int) e.getRawX() - locTX, dy = (int) e.getRawY() - locTY;
 			if (dx == 0 && dy == 0)
 				break;
-			else if (Math.abs(dx) + Math.abs(dy) > 5)
+			else if (Math.abs(dx) + Math.abs(dy) > dDis)
 				isMoved = true;
 			Log.v("tester", "Touch_Move " + dx + "," + dy);
 

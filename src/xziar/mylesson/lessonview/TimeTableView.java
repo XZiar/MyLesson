@@ -16,11 +16,14 @@ import android.text.Layout.Alignment;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
+import android.widget.Toast;
 import xziar.mylesson.util.SizeUtil;
 
 @SuppressLint("ClickableViewAccessibility")
-public class TimeTableView extends View
+public class TimeTableView extends View implements OnTouchListener
 {
 	protected Bitmap bufBM = null;
 	protected Canvas bufCV = null;
@@ -30,6 +33,7 @@ public class TimeTableView extends View
 
 	int bgColor = 0xffdde2e7;
 	private int viewWidth, viewHeight, width, height;
+	private int locTX, locTY;
 	private float blkPadX, blkPadY;
 	private boolean isReBuf = true;
 	protected ArrayList<LessonBlock> lessons = new ArrayList<LessonBlock>();
@@ -47,10 +51,11 @@ public class TimeTableView extends View
 		super(context);
 
 		setLayerType(View.LAYER_TYPE_HARDWARE, null);
+		setOnTouchListener(this);
 		setClickable(true);
 
 		Log.v("tester", "TimeTable initialize");
-		width = height = SizeUtil.dp2px(blkSize)+1;
+		width = height = SizeUtil.dp2px(blkSize) + 1;
 		viewHeight = height * 12;
 		viewWidth = width * 7;
 		blkPadX = width / 8f;
@@ -61,7 +66,7 @@ public class TimeTableView extends View
 		paintLine.setStyle(Style.STROKE);
 		paintTxt.setTextSize(width * 0.24f);
 		paintTxt.setColor(Color.WHITE);
-		
+
 	}
 
 	@Override
@@ -78,7 +83,8 @@ public class TimeTableView extends View
 		int[] time = lb.getTime();
 		int top = time[0] * height;
 		int last = time[1] - time[0];
-		canvas.drawRect(left, top, left + width - 1, top + last * height - 1, paintBlk);
+		canvas.drawRect(left, top, left + width - 1, top + last * height - 1,
+				paintBlk);
 
 		StaticLayout sl = new StaticLayout(lb.getName(), paintTxt,
 				(int) (width - blkPadX * 2), Alignment.ALIGN_NORMAL, 1.0f, 0.0f,
@@ -88,7 +94,7 @@ public class TimeTableView extends View
 		sl.draw(canvas);
 		canvas.restore();
 	}
-	
+
 	protected void bufferDraw()
 	{
 		if (bufCV == null || bufBM == null || bufBM.getWidth() != viewWidth
@@ -98,7 +104,7 @@ public class TimeTableView extends View
 					Bitmap.Config.ARGB_8888);
 			bufCV = new Canvas(bufBM);
 		}
-		
+
 		Log.v("tester", "TTV bufDraw HW:" + bufCV.isHardwareAccelerated());
 		bufCV.clipRect(0, 0, viewWidth, viewHeight);
 		bufCV.drawColor(bgColor);
@@ -109,22 +115,38 @@ public class TimeTableView extends View
 			baseY += height;
 			bufCV.drawLine(0, baseY, viewWidth, baseY, paintLine);
 		}
-		
+
 		for (LessonBlock lb : lessons)
 		{
 			drawBlock(bufCV, lb);
 		}
-		
+
 		isReBuf = false;
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas)
 	{
-		//Log.v("tester", "TTV draw HW:" + canvas.isHardwareAccelerated());
-		if(isReBuf)
+		// Log.v("tester", "TTV draw HW:" + canvas.isHardwareAccelerated());
+		if (isReBuf)
 			bufferDraw();
 		canvas.drawBitmap(bufBM, 0, 0, null);
 
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent e)
+	{
+		switch (e.getActionMasked())
+		{
+		case MotionEvent.ACTION_UP:
+			// click
+			int dx = (int) e.getRawX() - getLeft(), dy = (int) e.getRawY() - getTop();
+			String txt = "click week " + (dx / width) + " time "
+					+ (dy / height);
+			Toast.makeText(getContext(), txt, Toast.LENGTH_SHORT).show();
+			break;
+		}
+		return false;
 	}
 }
