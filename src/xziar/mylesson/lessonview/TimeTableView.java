@@ -159,15 +159,15 @@ public class TimeTableView extends View implements OnTouchListener
 			int dx = (int) e.getX() - getLeft(), dy = (int) e.getY() - getTop();
 			int w = dx / width, t = dy / height;
 			String txt = "click week " + w + " time " + t;
-			Toast.makeText(getContext(), txt, Toast.LENGTH_SHORT).show();
-			if (chooseListener != null)
+			Log.v("tester", txt);
+			if (chooseListener != null && lessonMap[w][t] != null)
 				chooseListener.onChoose(lessonMap[w][t]);
 			break;
 		}
 		return false;
 	}
 
-	public interface OnChooseListener
+	interface OnChooseListener
 	{
 		public void onChoose(LessonBlock lb);
 	}

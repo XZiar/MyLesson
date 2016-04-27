@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
-public class DatabaseUtil
+public class DBUtil
 {
 	private static final String dbName = "mylesson.db";
 	private static final String initSQL = "create table lessons("
@@ -25,6 +25,7 @@ public class DatabaseUtil
 	private static final String insertSQL = "insert into lessons"
 			+ "(Name,Place,TimeFrom,TimeLast,TimeWeek,WeekFrom,WeekTo,Color) "
 			+ "values(?,?,?,?,?,?,?,?)";
+	private static final String deleteSQL = "delete from lessons where LID=?";
 	private static final String selectAllSQL = "select "
 			+ "LID,Name,Place,TimeFrom,TimeLast,TimeWeek,WeekFrom,WeekTo,Color "
 			+ "from lessons";
@@ -44,12 +45,6 @@ public class DatabaseUtil
 			delete();
 			db.execSQL(initSQL);
 		}
-		LessonBean lb = new LessonBean();
-		lb.timeWeek = lb.timeFrom = 0;
-		lb.timeLast = 5;
-		lb.lessonName = "手机软件开发";
-		lb.place = "健行B103";
-		lb.color = 0xff40b060;
 	}
 
 	static public void add(LessonBean lb)
@@ -77,6 +72,21 @@ public class DatabaseUtil
 	static public void delete()
 	{
 		db.execSQL("drop table lessons");
+	}
+	
+	static public void delete(LessonBean lb)
+	{
+		SQLiteStatement stmt = db.compileStatement(deleteSQL);
+		stmt.bindLong(1, lb.LID);
+		try
+		{
+			int num = stmt.executeUpdateDelete();
+			Log.v("tester", "finish delete,affect "+num);
+		}
+		catch(SQLException e)
+		{
+			Log.e("sql", e.getLocalizedMessage());
+		}
 	}
 	
 	static public LessonBean[] query()

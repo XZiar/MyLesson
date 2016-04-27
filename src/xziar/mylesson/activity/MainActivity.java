@@ -1,10 +1,11 @@
 package xziar.mylesson.activity;
 
 import xziar.mylesson.R;
-import xziar.mylesson.data.DatabaseUtil;
+import xziar.mylesson.data.DBUtil;
 import xziar.mylesson.data.LessonBean;
 import xziar.mylesson.lessonview.LessonBlock;
 import xziar.mylesson.lessonview.LessonView;
+import xziar.mylesson.lessonview.LessonView.OnChooseItemListener;
 
 import java.util.ArrayList;
 
@@ -29,8 +30,9 @@ public class MainActivity extends Activity
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
+		lview = (LessonView) findViewById(R.id.lv);
 		
-		DatabaseUtil.onInit(getFilesDir());
+		DBUtil.onInit(getFilesDir());
 		
 		for (int a = 0; a < 7; a++)
 		{
@@ -43,18 +45,26 @@ public class MainActivity extends Activity
 				lb.lessonName = "手机软件开发";
 				lb.place = a + "楼" + b + "室";
 				lb.color = 0xff40b060;
-				DatabaseUtil.add(lb);
+				DBUtil.add(lb);
 			}
 		}
-		lview = (LessonView) findViewById(R.id.lv);
+		lview.setData(DBUtil.query());
 		
-		lview.setData(DatabaseUtil.query());
+		lview.SetOnChooseItemListener(new OnChooseItemListener(){
+			@Override
+			public void onChoose(LessonBlock lb)
+			{
+				DBUtil.delete((LessonBean)lb);
+				lview.setData(DBUtil.query());
+			}
+			
+		});
 	}
 	
 	@Override
 	protected void onDestroy()
 	{
-		DatabaseUtil.onExit();
+		DBUtil.onExit();
 		super.onDestroy();
 	}
 	
