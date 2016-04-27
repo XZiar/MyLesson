@@ -7,5 +7,6 @@ public interface LessonBlock
 	public int getBlkColor();
 	public boolean testWeek(int week);
 	public int getWeekDay();
-	public int[] getTime();
+	public int getTime();
+	public int getLast();
 }

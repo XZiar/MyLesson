@@ -1,5 +1,7 @@
 package xziar.mylesson.lessonview;
 
+import java.util.ArrayList;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -66,7 +68,7 @@ public class LessonView extends ViewGroup
 		 * = lb2.timeFrom = 5; lb2.timeTo = 7; lb2.lessonName= "人机交互"; lb2.color
 		 * = 0xffb040b0; ttv.lessons.add(lb2);
 		 */
-
+		ArrayList<LessonBlock> ls = new ArrayList<LessonBlock>();
 		for (int a = 0; a < 7; a++)
 		{
 			for (int b = 0; b < 12; b += 2)
@@ -74,12 +76,13 @@ public class LessonView extends ViewGroup
 				LessonBean lb = new LessonBean();
 				lb.timeWeek = a;
 				lb.timeFrom = b;
-				lb.timeTo = b + 2;
+				lb.timeLast = 2;
 				lb.lessonName = "手机软件开发";
 				lb.color = 0xff40b060;
-				ttv.lessons.add(lb);
+				ls.add(lb);
 			}
 		}
+		ttv.setLessons(ls);
 	}
 
 	private boolean scrollElement(int dx, int dy)
@@ -97,7 +100,7 @@ public class LessonView extends ViewGroup
 		loRH.offset(0, moveY);
 		loCH.set(rectCH);
 		loCH.offset(moveX, 0);
-		
+
 		ttv.layout(loTTV.left, loTTV.top, loTTV.right, loTTV.bottom);
 		rowH.layout(loRH.left, loRH.top, loRH.right, loRH.bottom);
 		colH.layout(loCH.left, loCH.top, loCH.right, loCH.bottom);
@@ -186,8 +189,8 @@ public class LessonView extends ViewGroup
 		{
 		case MotionEvent.ACTION_DOWN:
 			isMoved = isTTV = false;
-			locTX = (int) e.getRawX();
-			locTY = (int) e.getRawY();
+			locTX = (int) e.getX();
+			locTY = (int) e.getY();
 			if (rectTTV.contains(locTX, locTY))
 			{
 				objTouch = ttv;
@@ -229,7 +232,7 @@ public class LessonView extends ViewGroup
 		switch (e.getActionMasked())
 		{
 		case MotionEvent.ACTION_MOVE:
-			int dx = (int) e.getRawX() - locTX, dy = (int) e.getRawY() - locTY;
+			int dx = (int) e.getX() - locTX, dy = (int) e.getY() - locTY;
 			if (dx == 0 && dy == 0)
 				break;
 			else if (Math.abs(dx) + Math.abs(dy) > dDis)

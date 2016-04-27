@@ -33,10 +33,12 @@ public class TimeTableView extends View implements OnTouchListener
 
 	int bgColor = 0xffdde2e7;
 	private int viewWidth, viewHeight, width, height;
-	private int locTX, locTY;
 	private float blkPadX, blkPadY;
 	private boolean isReBuf = true;
-	protected ArrayList<LessonBlock> lessons = new ArrayList<LessonBlock>();
+	private LessonBlock[][] lessonMap = null;
+	private ArrayList<LessonBlock> lessons = new ArrayList<LessonBlock>();
+
+	private OnChooseListener chooseListener = null;
 
 	/**
 	 * constructor of TimeTableView
@@ -49,7 +51,6 @@ public class TimeTableView extends View implements OnTouchListener
 	public TimeTableView(Context context, int blkSize)
 	{
 		super(context);
-
 		setLayerType(View.LAYER_TYPE_HARDWARE, null);
 		setOnTouchListener(this);
 		setClickable(true);
@@ -78,13 +79,16 @@ public class TimeTableView extends View implements OnTouchListener
 
 	private void drawBlock(Canvas canvas, LessonBlock lb)
 	{
-		paintBlk.setColor(lb.getBlkColor());
 		int left = lb.getWeekDay() * width;
-		int[] time = lb.getTime();
-		int top = time[0] * height;
-		int last = time[1] - time[0];
-		canvas.drawRect(left, top, left + width - 1, top + last * height - 1,
-				paintBlk);
+		int top = lb.getTime() * height;
+		int bottom = top + lb.getLast() * height;
+		for (int t = lb.getTime(), w = lb.getWeekDay(), b = lb.getLast(); b-- > 0;)
+		{
+			lessonMap[w][t++] = lb;
+		}
+
+		paintBlk.setColor(lb.getBlkColor());
+		canvas.drawRect(left, top, left + width - 1, bottom - 1, paintBlk);
 
 		StaticLayout sl = new StaticLayout(lb.getName(), paintTxt,
 				(int) (width - blkPadX * 2), Alignment.ALIGN_NORMAL, 1.0f, 0.0f,
@@ -115,7 +119,7 @@ public class TimeTableView extends View implements OnTouchListener
 			baseY += height;
 			bufCV.drawLine(0, baseY, viewWidth, baseY, paintLine);
 		}
-
+		lessonMap = new LessonBlock[7][12];
 		for (LessonBlock lb : lessons)
 		{
 			drawBlock(bufCV, lb);
@@ -141,12 +145,30 @@ public class TimeTableView extends View implements OnTouchListener
 		{
 		case MotionEvent.ACTION_UP:
 			// click
-			int dx = (int) e.getRawX() - getLeft(), dy = (int) e.getRawY() - getTop();
-			String txt = "click week " + (dx / width) + " time "
-					+ (dy / height);
+			int dx = (int) e.getX() - getLeft(), dy = (int) e.getY() - getTop();
+			int w = dx / width, t = dy / height;
+			String txt = "click week " + w + " time " + t;
 			Toast.makeText(getContext(), txt, Toast.LENGTH_SHORT).show();
+			if(chooseListener != null)
+				chooseListener.onChoose(lessonMap[w][t]);
 			break;
 		}
 		return false;
+	}
+
+	public interface OnChooseListener
+	{
+		public void onChoose(LessonBlock lb);
+	}
+
+	public void setChooseListener(OnChooseListener chooseListener)
+	{
+		this.chooseListener = chooseListener;
+	}
+	
+	public void setLessons(ArrayList<LessonBlock> lessons)
+	{
+		this.lessons = lessons;
+		bufferDraw();
 	}
 }
