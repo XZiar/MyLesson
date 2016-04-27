@@ -16,23 +16,28 @@ import android.text.Layout.Alignment;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
+import android.widget.Toast;
 import xziar.mylesson.util.SizeUtil;
 
 @SuppressLint("ClickableViewAccessibility")
-public class TimeTableView extends View
+public class TimeTableView extends View implements OnTouchListener
 {
 	protected Bitmap bufBM = null;
 	protected Canvas bufCV = null;
 	protected Paint paintLine = new Paint(Paint.ANTI_ALIAS_FLAG);
-	protected Paint paintBlk = new Paint(Paint.ANTI_ALIAS_FLAG);
 	protected TextPaint paintTxt = new TextPaint(Paint.ANTI_ALIAS_FLAG);
 
 	int bgColor = 0xffdde2e7;
 	private int viewWidth, viewHeight, width, height;
 	private float blkPadX, blkPadY;
 	private boolean isReBuf = true;
-	protected ArrayList<LessonBlock> lessons = new ArrayList<LessonBlock>();
+	private LessonBlock[][] lessonMap = null;
+	private ArrayList<LessonBlock> lessons = new ArrayList<LessonBlock>();
+
+	private OnChooseListener chooseListener = null;
 
 	/**
 	 * constructor of TimeTableView
@@ -45,23 +50,22 @@ public class TimeTableView extends View
 	public TimeTableView(Context context, int blkSize)
 	{
 		super(context);
-
 		setLayerType(View.LAYER_TYPE_HARDWARE, null);
+		setOnTouchListener(this);
 		setClickable(true);
 
 		Log.v("tester", "TimeTable initialize");
-		width = height = SizeUtil.dp2px(blkSize)+1;
+		width = height = SizeUtil.dp2px(blkSize) + 1;
 		viewHeight = height * 12;
 		viewWidth = width * 7;
 		blkPadX = width / 8f;
-		blkPadY = height / 8f;
+		blkPadY = height / 10f;
 
 		paintLine.setColor(Color.LTGRAY);
 		paintLine.setStrokeWidth(1.0f);
 		paintLine.setStyle(Style.STROKE);
-		paintTxt.setTextSize(width * 0.24f);
 		paintTxt.setColor(Color.WHITE);
-		
+		paintTxt.setTextSize(width * 0.24f);
 	}
 
 	@Override
@@ -73,22 +77,38 @@ public class TimeTableView extends View
 
 	private void drawBlock(Canvas canvas, LessonBlock lb)
 	{
-		paintBlk.setColor(lb.getBlkColor());
-		int left = lb.getWeekDay() * width;
-		int[] time = lb.getTime();
-		int top = time[0] * height;
-		int last = time[1] - time[0];
-		canvas.drawRect(left, top, left + width - 1, top + last * height - 1, paintBlk);
+		int lbTime = lb.getTime(), lbWD = lb.getWeekDay(),
+				lbLast = lb.getLast();
+		final int left = lbWD * width, top = lbTime * height,
+				bottom = top + lbLast * height, halfH = height * lbLast / 2;
+		for (; lbLast-- > 0;)
+		{
+			lessonMap[lbWD][lbTime++] = lb;
+		}
+		canvas.save();
+		canvas.clipRect(left, top, left + width - 1, bottom - 1);
+		canvas.drawColor(lb.getBlkColor());
+		canvas.restore();
 
 		StaticLayout sl = new StaticLayout(lb.getName(), paintTxt,
 				(int) (width - blkPadX * 2), Alignment.ALIGN_NORMAL, 1.0f, 0.0f,
 				true);
 		canvas.save();
 		canvas.translate(left + blkPadX, top + blkPadY);
+		canvas.clipRect(0, 0, width, height);
+		sl.draw(canvas);
+		canvas.restore();
+
+		sl = new StaticLayout(lb.getAppendix(), paintTxt,
+				(int) (width - blkPadX * 2), Alignment.ALIGN_NORMAL, 1.0f, 0.0f,
+				true);
+		canvas.save();
+		canvas.translate(left + blkPadX, top + halfH);
+		canvas.clipRect(0, 0, width, halfH);
 		sl.draw(canvas);
 		canvas.restore();
 	}
-	
+
 	protected void bufferDraw()
 	{
 		if (bufCV == null || bufBM == null || bufBM.getWidth() != viewWidth
@@ -98,7 +118,7 @@ public class TimeTableView extends View
 					Bitmap.Config.ARGB_8888);
 			bufCV = new Canvas(bufBM);
 		}
-		
+
 		Log.v("tester", "TTV bufDraw HW:" + bufCV.isHardwareAccelerated());
 		bufCV.clipRect(0, 0, viewWidth, viewHeight);
 		bufCV.drawColor(bgColor);
@@ -109,22 +129,56 @@ public class TimeTableView extends View
 			baseY += height;
 			bufCV.drawLine(0, baseY, viewWidth, baseY, paintLine);
 		}
-		
+		lessonMap = new LessonBlock[7][12];
 		for (LessonBlock lb : lessons)
 		{
 			drawBlock(bufCV, lb);
 		}
-		
+
 		isReBuf = false;
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas)
 	{
-		//Log.v("tester", "TTV draw HW:" + canvas.isHardwareAccelerated());
-		if(isReBuf)
+		// Log.v("tester", "TTV draw HW:" + canvas.isHardwareAccelerated());
+		if (isReBuf)
 			bufferDraw();
 		canvas.drawBitmap(bufBM, 0, 0, null);
 
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent e)
+	{
+		switch (e.getActionMasked())
+		{
+		case MotionEvent.ACTION_UP:
+			// click
+			int dx = (int) e.getX() - getLeft(), dy = (int) e.getY() - getTop();
+			int w = dx / width, t = dy / height;
+			String txt = "click week " + w + " time " + t;
+			Toast.makeText(getContext(), txt, Toast.LENGTH_SHORT).show();
+			if (chooseListener != null)
+				chooseListener.onChoose(lessonMap[w][t]);
+			break;
+		}
+		return false;
+	}
+
+	public interface OnChooseListener
+	{
+		public void onChoose(LessonBlock lb);
+	}
+
+	public void setChooseListener(OnChooseListener chooseListener)
+	{
+		this.chooseListener = chooseListener;
+	}
+
+	public void setLessons(ArrayList<LessonBlock> lessons)
+	{
+		this.lessons = lessons;
+		bufferDraw();
 	}
 }

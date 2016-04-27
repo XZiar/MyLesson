@@ -3,6 +3,7 @@
  */
 package xziar.mylesson.lessonview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -10,10 +11,14 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetricsInt;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
+import android.widget.Toast;
 import xziar.mylesson.util.SizeUtil;
 
-public class ColumnHeaders extends View
+@SuppressLint("ClickableViewAccessibility")
+public class ColumnHeaders extends View implements OnTouchListener
 {
 	private final static String[] days = { "周一", "周二", "周三", "周四", "周五", "周六",
 			"周日" };
@@ -40,6 +45,8 @@ public class ColumnHeaders extends View
 	public ColumnHeaders(Context context, int columnWidth, int height)
 	{
 		super(context);
+		setLayerType(View.LAYER_TYPE_HARDWARE, null);
+		setOnTouchListener(this);
 
 		this.width = SizeUtil.dp2px(columnWidth) + 1;
 		viewHeight = this.height = SizeUtil.dp2px(height);
@@ -96,5 +103,20 @@ public class ColumnHeaders extends View
 		if(isReBuf)
 			bufferDraw();
 		canvas.drawBitmap(bufBM, 0, 0, null);
+	}
+	
+	@Override
+	public boolean onTouch(View v, MotionEvent e)
+	{
+		switch (e.getActionMasked())
+		{
+		case MotionEvent.ACTION_UP:
+			// click
+			int dx = (int) e.getX() - getLeft();
+			String txt = "click week " + (dx / width);
+			Toast.makeText(getContext(), txt, Toast.LENGTH_SHORT).show();
+			break;
+		}
+		return false;
 	}
 }

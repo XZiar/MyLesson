@@ -1,7 +1,11 @@
 package xziar.mylesson.lessonview;
 
+import java.util.ArrayList;
+
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -12,7 +16,11 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import xziar.mylesson.data.LessonBean;
+import xziar.mylesson.lessonview.TimeTableView.OnChooseListener;
+import xziar.mylesson.util.SizeUtil;
 
 public class LessonView extends ViewGroup
 {
@@ -24,8 +32,8 @@ public class LessonView extends ViewGroup
 	int bgColor = 0xfff7f7f7;
 	private Rect rectRH = new Rect(), rectCH = new Rect(), rectTTV = new Rect();
 	private Rect loRH = new Rect(), loCH = new Rect(), loTTV = new Rect();
-	private int offsetX = 0, offsetY = 0, moveX, moveY, lastX, lastY;
-	private int locTX, locTY, maxDX, maxDY;
+	private int offsetX = 0, offsetY = 0, moveX = -1, moveY = -1, lastX, lastY;
+	private int locTX, locTY, maxDX, maxDY, dDis;
 	private boolean isTTV = false, isMoved = false;
 	private View objTouch;
 
@@ -49,6 +57,7 @@ public class LessonView extends ViewGroup
 	private void init(Context context)
 	{
 		final int blkSize = 56;
+		dDis = SizeUtil.dp2px(blkSize) / 10;
 		rowH = new RowHeaders(context, 38, blkSize);
 		colH = new ColumnHeaders(context, blkSize, 44);
 		ttv = new TimeTableView(context, blkSize);
@@ -64,20 +73,47 @@ public class LessonView extends ViewGroup
 		 * = lb2.timeFrom = 5; lb2.timeTo = 7; lb2.lessonName= "人机交互"; lb2.color
 		 * = 0xffb040b0; ttv.lessons.add(lb2);
 		 */
-
+		ArrayList<LessonBlock> ls = new ArrayList<LessonBlock>();
 		for (int a = 0; a < 7; a++)
 		{
-			for (int b = 0; b < 12; b += 2)
+			for (int b = 0; b < 12; b += 4)
 			{
 				LessonBean lb = new LessonBean();
 				lb.timeWeek = a;
 				lb.timeFrom = b;
-				lb.timeTo = b + 2;
+				lb.timeLast = 3;
 				lb.lessonName = "手机软件开发";
+				lb.place = a + "楼" + b + "室";
 				lb.color = 0xff40b060;
-				ttv.lessons.add(lb);
+				ls.add(lb);
 			}
 		}
+		ttv.setLessons(ls);
+		ttv.setChooseListener(new OnChooseListener()
+		{
+			@Override
+			public void onChoose(LessonBlock lb)
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						getContext());
+				builder.setMessage(lb.getName() + "\n" + lb.getAppendix())
+						.setPositiveButton("确定",
+								new DialogInterface.OnClickListener()
+								{
+									public void onClick(DialogInterface arg0,
+											int arg1)
+									{
+									}
+								});
+				// 透明
+				final AlertDialog dlg = builder.create();
+				Window window = dlg.getWindow();
+				WindowManager.LayoutParams lp = window.getAttributes();
+				lp.alpha = 0.9f;
+				window.setAttributes(lp);
+				dlg.show();
+			}
+		});
 	}
 
 	private boolean scrollElement(int dx, int dy)
@@ -95,6 +131,10 @@ public class LessonView extends ViewGroup
 		loRH.offset(0, moveY);
 		loCH.set(rectCH);
 		loCH.offset(moveX, 0);
+
+		ttv.layout(loTTV.left, loTTV.top, loTTV.right, loTTV.bottom);
+		rowH.layout(loRH.left, loRH.top, loRH.right, loRH.bottom);
+		colH.layout(loCH.left, loCH.top, loCH.right, loCH.bottom);
 		return true;
 	}
 
@@ -130,7 +170,7 @@ public class LessonView extends ViewGroup
 
 		maxDX = getWidth() - rectTTV.right;
 		maxDY = getHeight() - rectTTV.bottom;
-
+		Log.v("tester", "LessonView : " + getWidth() + "," + getHeight());
 	}
 
 	@Override
@@ -139,22 +179,13 @@ public class LessonView extends ViewGroup
 	{
 		Log.v("tester", "LessonView onLayout");
 		scrollElement(0, 0);
-
-		Log.v("tester", "loTTV:" + loTTV);
-		ttv.layout(loTTV.left, loTTV.top, loTTV.right, loTTV.bottom);
-
-		Log.v("tester", "loRH:" + loRH);
-		rowH.layout(loRH.left, loRH.top, loRH.right, loRH.bottom);
-
-		Log.v("tester", "loCH:" + loCH);
-		colH.layout(loCH.left, loCH.top, loCH.right, loCH.bottom);
 	}
 
 	@Override
 	protected void dispatchDraw(Canvas canvas)
 	{
-		//Log.v("tester", "LessonView dispatchDraw");
-		
+		// Log.v("tester", "LessonView dispatchDraw");
+
 		canvas.save();
 		canvas.clipRect(rectTTV);
 		canvas.translate(loTTV.left, loTTV.top);
@@ -189,24 +220,22 @@ public class LessonView extends ViewGroup
 		{
 		case MotionEvent.ACTION_DOWN:
 			isMoved = isTTV = false;
-			locTX = (int) e.getRawX();
-			locTY = (int) e.getRawY();
+			locTX = (int) e.getX();
+			locTY = (int) e.getY();
 			if (rectTTV.contains(locTX, locTY))
 			{
 				objTouch = ttv;
-				ttv.onTouchEvent(e);
 				isTTV = true;
 			}
 			else if (rectRH.contains(locTX, locTY))
 			{
 				objTouch = rowH;
-				rowH.onTouchEvent(e);
 			}
 			else if (rectCH.contains(locTX, locTY))
 			{
 				objTouch = colH;
-				colH.onTouchEvent(e);
 			}
+			objTouch.dispatchTouchEvent(e);
 			Log.v("tester", "Touch_Down at " + locTX + "," + locTY);
 			break;
 		case MotionEvent.ACTION_MOVE:
@@ -215,7 +244,9 @@ public class LessonView extends ViewGroup
 			break;
 		case MotionEvent.ACTION_UP:
 			if (!isMoved)
-				objTouch.onTouchEvent(e);
+			{
+				objTouch.dispatchTouchEvent(e);
+			}
 			else if (isTTV)
 				onTouchEvent(e);
 			break;
@@ -232,10 +263,10 @@ public class LessonView extends ViewGroup
 		switch (e.getActionMasked())
 		{
 		case MotionEvent.ACTION_MOVE:
-			int dx = (int) e.getRawX() - locTX, dy = (int) e.getRawY() - locTY;
+			int dx = (int) e.getX() - locTX, dy = (int) e.getY() - locTY;
 			if (dx == 0 && dy == 0)
 				break;
-			else if (Math.abs(dx) + Math.abs(dy) > 5)
+			else if (Math.abs(dx) + Math.abs(dy) > dDis)
 				isMoved = true;
 			Log.v("tester", "Touch_Move " + dx + "," + dy);
 

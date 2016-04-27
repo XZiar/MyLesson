@@ -6,7 +6,7 @@ public class LessonBean implements LessonBlock
 {
 	public String lessonName = "";
 	public String place = "";
-	public int timeFrom, timeTo, timeWeek, weekFrom, weekTo;
+	public int timeFrom, timeLast, timeWeek, weekFrom, weekTo;
 	public int color = 0xff444444;
 
 	@Override
@@ -28,9 +28,9 @@ public class LessonBean implements LessonBlock
 	}
 
 	@Override
-	public int[] getTime()
+	public int getTime()
 	{
-		return new int[] { timeFrom, timeTo };
+		return timeFrom;
 	}
 
 	@Override
@@ -43,6 +43,12 @@ public class LessonBean implements LessonBlock
 	public int getWeekDay()
 	{
 		return timeWeek;
+	}
+
+	@Override
+	public int getLast()
+	{
+		return timeLast;
 	}
 
 }
