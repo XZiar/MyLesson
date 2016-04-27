@@ -22,16 +22,16 @@ import xziar.mylesson.util.SizeUtil;
 @SuppressLint("ClickableViewAccessibility")
 public class TimeTableView extends View
 {
-	private int viewWidth, viewHeight, width, height;
-	private float blkPadX, blkPadY;
-	private boolean isReBuf = true;
-
 	protected Bitmap bufBM = null;
 	protected Canvas bufCV = null;
 	protected Paint paintLine = new Paint(Paint.ANTI_ALIAS_FLAG);
 	protected Paint paintBlk = new Paint(Paint.ANTI_ALIAS_FLAG);
 	protected TextPaint paintTxt = new TextPaint(Paint.ANTI_ALIAS_FLAG);
 
+	int bgColor = 0xffdde2e7;
+	private int viewWidth, viewHeight, width, height;
+	private float blkPadX, blkPadY;
+	private boolean isReBuf = true;
 	protected ArrayList<LessonBlock> lessons = new ArrayList<LessonBlock>();
 
 	/**
@@ -101,7 +101,7 @@ public class TimeTableView extends View
 		
 		Log.v("tester", "TTV bufDraw HW:" + bufCV.isHardwareAccelerated());
 		bufCV.clipRect(0, 0, viewWidth, viewHeight);
-		bufCV.drawColor(0xffdde2e7);
+		bufCV.drawColor(bgColor);
 
 		float baseY = 0;
 		for (int a = 0; a < 12; a++)

@@ -24,6 +24,7 @@ public class ColumnHeaders extends View
 	protected Canvas bufCV = null;
 	
 	private boolean isReBuf = true;
+	int bgColor = 0xfff7f7f7;
 	private int viewWidth, viewHeight, width, height;// in px
 
 	/**
@@ -71,7 +72,7 @@ public class ColumnHeaders extends View
 		
 		Log.v("tester", "RowH bufDraw HW:" + bufCV.isHardwareAccelerated());
 		bufCV.clipRect(0, 0, viewWidth, viewHeight);
-		bufCV.drawColor(0xfff7f7f7);
+		bufCV.drawColor(bgColor);
 
 		FontMetricsInt fontMetrics = paintDay.getFontMetricsInt();
 		float baselineDay = (height * 3 / 5 - fontMetrics.top - fontMetrics.bottom)

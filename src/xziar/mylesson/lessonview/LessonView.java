@@ -19,12 +19,13 @@ public class LessonView extends ViewGroup
 	private RowHeaders rowH = null;
 	private ColumnHeaders colH = null;
 	private TimeTableView ttv = null;
-
 	protected Paint paintLine = new Paint(Paint.ANTI_ALIAS_FLAG);
 
+	int bgColor = 0xfff7f7f7;
 	private Rect rectRH = new Rect(), rectCH = new Rect(), rectTTV = new Rect();
 	private Rect loRH = new Rect(), loCH = new Rect(), loTTV = new Rect();
-	private int moveX = 0, moveY = 0, lastX, lastY, maxDX, maxDY;
+	private int offsetX = 0, offsetY = 0, moveX, moveY, lastX, lastY;
+	private int locTX, locTY, maxDX, maxDY;
 	private boolean isTTV = false, isMoved = false;
 	private View objTouch;
 
@@ -47,7 +48,7 @@ public class LessonView extends ViewGroup
 
 	private void init(Context context)
 	{
-		final int blkSize = 64;
+		final int blkSize = 56;
 		rowH = new RowHeaders(context, 38, blkSize);
 		colH = new ColumnHeaders(context, blkSize, 44);
 		ttv = new TimeTableView(context, blkSize);
@@ -79,12 +80,14 @@ public class LessonView extends ViewGroup
 		}
 	}
 
-	private void scrollElement(int dx, int dy)
+	private boolean scrollElement(int dx, int dy)
 	{
-		lastX += dx;
-		lastY += dy;
-		moveX = Math.max(maxDX, Math.min(0, moveX + dx));
-		moveY = Math.max(maxDY, Math.min(0, moveY + dy));
+		lastX = moveX;
+		lastY = moveY;
+		moveX = Math.max(maxDX, Math.min(0, offsetX + dx));
+		moveY = Math.max(maxDY, Math.min(0, offsetY + dy));
+		if (lastX == moveX && lastY == moveY)
+			return false;// no change
 
 		loTTV.set(rectTTV);
 		loTTV.offset(moveX, moveY);
@@ -92,6 +95,7 @@ public class LessonView extends ViewGroup
 		loRH.offset(0, moveY);
 		loCH.set(rectCH);
 		loCH.offset(moveX, 0);
+		return true;
 	}
 
 	@Override
@@ -149,8 +153,8 @@ public class LessonView extends ViewGroup
 	@Override
 	protected void dispatchDraw(Canvas canvas)
 	{
-		Log.v("tester", "LessonView dispatchDraw");
-
+		//Log.v("tester", "LessonView dispatchDraw");
+		
 		canvas.save();
 		canvas.clipRect(rectTTV);
 		canvas.translate(loTTV.left, loTTV.top);
@@ -172,7 +176,7 @@ public class LessonView extends ViewGroup
 		// draw self
 		canvas.save();
 		canvas.clipRect(0, 0, rectRH.right, rectCH.bottom);
-		canvas.drawColor(0xfff7f7f7);
+		canvas.drawColor(bgColor);
 		canvas.restore();
 		canvas.drawLine(0, loCH.bottom, canvas.getWidth(), loCH.bottom,
 				paintLine);
@@ -185,25 +189,25 @@ public class LessonView extends ViewGroup
 		{
 		case MotionEvent.ACTION_DOWN:
 			isMoved = isTTV = false;
-			lastX = (int) e.getRawX();
-			lastY = (int) e.getRawY();
-			if (rectTTV.contains(lastX, lastY))
+			locTX = (int) e.getRawX();
+			locTY = (int) e.getRawY();
+			if (rectTTV.contains(locTX, locTY))
 			{
 				objTouch = ttv;
 				ttv.onTouchEvent(e);
 				isTTV = true;
 			}
-			else if (rectRH.contains(lastX, lastY))
+			else if (rectRH.contains(locTX, locTY))
 			{
 				objTouch = rowH;
 				rowH.onTouchEvent(e);
 			}
-			else if (rectCH.contains(lastX, lastY))
+			else if (rectCH.contains(locTX, locTY))
 			{
 				objTouch = colH;
 				colH.onTouchEvent(e);
 			}
-			Log.v("tester", "Touch_Down at " + lastX + "," + lastY);
+			Log.v("tester", "Touch_Down at " + locTX + "," + locTY);
 			break;
 		case MotionEvent.ACTION_MOVE:
 			if (isTTV)
@@ -212,6 +216,8 @@ public class LessonView extends ViewGroup
 		case MotionEvent.ACTION_UP:
 			if (!isMoved)
 				objTouch.onTouchEvent(e);
+			else if (isTTV)
+				onTouchEvent(e);
 			break;
 		}
 
@@ -226,15 +232,21 @@ public class LessonView extends ViewGroup
 		switch (e.getActionMasked())
 		{
 		case MotionEvent.ACTION_MOVE:
-			int dx = (int) e.getRawX() - lastX, dy = (int) e.getRawY() - lastY;
+			int dx = (int) e.getRawX() - locTX, dy = (int) e.getRawY() - locTY;
 			if (dx == 0 && dy == 0)
-				return true;
-			else
+				break;
+			else if (Math.abs(dx) + Math.abs(dy) > 5)
 				isMoved = true;
 			Log.v("tester", "Touch_Move " + dx + "," + dy);
 
-			scrollElement(dx, dy);
+			if (scrollElement(dx, dy))
+				invalidate();
+			break;
+		case MotionEvent.ACTION_UP:
+			offsetX = moveX;
+			offsetY = moveY;
 			invalidate();
+			break;
 		}
 		return true;
 	}

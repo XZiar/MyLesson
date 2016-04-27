@@ -20,7 +20,6 @@ public class RowHeaders extends View
 	private final static String[] times = { "8:00", "8:55", "9:55", "10:50",
 			"11:45", "13:30", "14:25", "15:25", "16:20", "18:30", "19:25",
 			"20:20" };
-	private boolean isReBuf = true;
 
 	protected Bitmap bufBM = null;
 	protected Canvas bufCV = null;
@@ -28,6 +27,8 @@ public class RowHeaders extends View
 	protected Paint paintCnt = new Paint(Paint.ANTI_ALIAS_FLAG);
 	protected Paint paintLine = new Paint(Paint.ANTI_ALIAS_FLAG);
 
+	int bgColor = 0xffdde2e7;
+	private boolean isReBuf = true;
 	private int viewWidth, viewHeight, width, height;// in px
 
 	/**
@@ -79,7 +80,7 @@ public class RowHeaders extends View
 		
 		Log.v("tester", "RowH bufDraw HW:" + bufCV.isHardwareAccelerated());
 		bufCV.clipRect(0, 0, viewWidth, viewHeight);
-		bufCV.drawColor(0xffdde2e7);
+		bufCV.drawColor(bgColor);
 
 		FontMetricsInt fontMetrics = paintTime.getFontMetricsInt();
 		float baselineTime = (height * 1 / 2 - fontMetrics.top
