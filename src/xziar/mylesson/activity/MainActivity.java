@@ -1,7 +1,7 @@
 package xziar.mylesson.activity;
 
 import xziar.mylesson.R;
-
+import xziar.mylesson.data.DatabaseUtil;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -21,6 +21,15 @@ public class MainActivity extends Activity
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
+		
+		DatabaseUtil.onInit(getFilesDir());
+	}
+	
+	@Override
+	protected void onDestroy()
+	{
+		DatabaseUtil.onExit();
+		super.onDestroy();
 	}
 	
 	public static Context getContext()
