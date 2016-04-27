@@ -20,7 +20,6 @@ public class LessonView extends ViewGroup
 	private TimeTableView ttv = null;
 
 	protected Paint paintLine = new Paint(Paint.ANTI_ALIAS_FLAG);
-	protected Paint paintBG = new Paint(Paint.ANTI_ALIAS_FLAG);
 
 	private Rect rectRH = new Rect(), rectCH = new Rect(), rectTTV = new Rect();
 	private Rect loRH = new Rect(), loCH = new Rect(), loTTV = new Rect();
@@ -54,7 +53,6 @@ public class LessonView extends ViewGroup
 		paintLine.setColor(Color.GRAY);
 		paintLine.setStrokeWidth(2.0f);
 		paintLine.setStyle(Style.STROKE);
-		paintBG.setColor(0xfff7f7f7);
 		
 /*		LessonBean lb = new LessonBean();
 		lb.timeWeek = lb.timeFrom = 0;
@@ -174,10 +172,11 @@ public class LessonView extends ViewGroup
 
 		// draw self
 		canvas.save();
-		canvas.drawRect(0, 0, rectRH.right, rectCH.bottom, paintBG);
+		canvas.clipRect(0, 0, rectRH.right, rectCH.bottom);
+		canvas.drawColor(0xfff7f7f7);
+		canvas.restore();
 		canvas.drawLine(0, loCH.bottom, canvas.getWidth(), loCH.bottom,
 				paintLine);
-		canvas.restore();
 	}
 
 	@Override

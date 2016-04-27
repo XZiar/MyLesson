@@ -4,6 +4,7 @@
 package xziar.mylesson.lessonview;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -19,7 +20,10 @@ public class RowHeaders extends View
 	private final static String[] times = { "8:00", "8:55", "9:55", "10:50",
 			"11:45", "13:30", "14:25", "15:25", "16:20", "18:30", "19:25",
 			"20:20" };
+	private boolean isReBuf = true;
 
+	protected Bitmap bufBM = null;
+	protected Canvas bufCV = null;
 	protected Paint paintTime = new Paint(Paint.ANTI_ALIAS_FLAG);
 	protected Paint paintCnt = new Paint(Paint.ANTI_ALIAS_FLAG);
 	protected Paint paintLine = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -64,29 +68,44 @@ public class RowHeaders extends View
 		setMeasuredDimension(viewWidth, viewHeight);
 	}
 
-	@Override
-	protected void onDraw(Canvas canvas)
+	protected void bufferDraw()
 	{
-		int w = canvas.getWidth(), h = canvas.getHeight();
-		Log.v("tester", "rowH draw " + w + "," + h);
+		if (bufCV == null || bufBM == null || bufBM.getWidth() != viewWidth
+				|| bufBM.getHeight() != viewHeight)
+		{
+			bufBM = Bitmap.createBitmap(viewWidth, viewHeight,
+					Bitmap.Config.ARGB_8888);
+			bufCV = new Canvas(bufBM);
+		}
 		
+		Log.v("tester", "RowH bufDraw HW:" + bufCV.isHardwareAccelerated());
+		bufCV.clipRect(0, 0, viewWidth, viewHeight);
+		bufCV.drawColor(0xffdde2e7);
+
 		FontMetricsInt fontMetrics = paintTime.getFontMetricsInt();
 		float baselineTime = (height * 1 / 2 - fontMetrics.top
 				- fontMetrics.bottom) / 2f;
 		fontMetrics = paintCnt.getFontMetricsInt();
 		float baselineCnt = (height * 4 / 3 - fontMetrics.top
 				- fontMetrics.bottom) / 2f;
-
-		canvas.drawColor(0xffdde2e7);
 		
 		float baseX = width / 2f, baseY = 0;
 		for (Integer a = 0; a < times.length;)
 		{
-			canvas.drawText(times[a], baseX, baseY + baselineTime, paintTime);
-			a++;
-			canvas.drawText(a.toString(), baseX, baseY + baselineCnt, paintCnt);
+			bufCV.drawText(times[a++], baseX, baseY + baselineTime, paintTime);
+			bufCV.drawText(a.toString(), baseX, baseY + baselineCnt, paintCnt);
 			baseY += height;
-			canvas.drawLine(0, baseY, width, baseY, paintLine);
+			bufCV.drawLine(0, baseY, width, baseY, paintLine);
 		}
+		isReBuf = false;
+	}
+	
+	@Override
+	protected void onDraw(Canvas canvas)
+	{
+		if(isReBuf)
+			bufferDraw();
+		canvas.drawBitmap(bufBM, 0, 0, null);
+		
 	}
 }

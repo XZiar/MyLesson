@@ -82,8 +82,7 @@ public class TimeTableView extends View
 			bufCV = new Canvas(bufBM);
 		}
 		
-		Log.v("tester", "TTV bufDraw");
-		
+		Log.v("tester", "TTV bufDraw HW:" + bufCV.isHardwareAccelerated());
 		bufCV.clipRect(0, 0, viewWidth, viewHeight);
 		bufCV.drawColor(0xffdde2e7);
 
@@ -103,11 +102,7 @@ public class TimeTableView extends View
 	@Override
 	protected void onDraw(Canvas canvas)
 	{
-		Log.v("tester", "TTV HW:" + canvas.isHardwareAccelerated());
-		// super.onDraw(canvas);
-		int w = canvas.getWidth(), h = canvas.getHeight();
-		Log.v("tester", "TTV draw " + w + "," + h);
-
+		//Log.v("tester", "TTV draw HW:" + canvas.isHardwareAccelerated());
 		if(isReBuf)
 			bufferDraw();
 		canvas.drawBitmap(bufBM, 0, 0, null);
