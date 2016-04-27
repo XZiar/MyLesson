@@ -50,7 +50,7 @@ public class TimeTableView extends View
 		setClickable(true);
 
 		Log.v("tester", "TimeTable initialize");
-		width = height = SizeUtil.dp2px(blkSize);
+		width = height = SizeUtil.dp2px(blkSize)+1;
 		viewHeight = height * 12;
 		viewWidth = width * 7;
 		blkPadX = width / 8f;
@@ -61,17 +61,34 @@ public class TimeTableView extends View
 		paintLine.setStyle(Style.STROKE);
 		paintTxt.setTextSize(width * 0.24f);
 		paintTxt.setColor(Color.WHITE);
-
+		
 	}
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
 	{
-		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		setMeasuredDimension(viewWidth, viewHeight);
 		Log.v("tester", "TTV onMeasure " + viewWidth + "," + viewHeight);
 	}
 
+	private void drawBlock(Canvas canvas, LessonBlock lb)
+	{
+		paintBlk.setColor(lb.getBlkColor());
+		int left = lb.getWeekDay() * width;
+		int[] time = lb.getTime();
+		int top = time[0] * height;
+		int last = time[1] - time[0];
+		canvas.drawRect(left, top, left + width - 1, top + last * height - 1, paintBlk);
+
+		StaticLayout sl = new StaticLayout(lb.getName(), paintTxt,
+				(int) (width - blkPadX * 2), Alignment.ALIGN_NORMAL, 1.0f, 0.0f,
+				true);
+		canvas.save();
+		canvas.translate(left + blkPadX, top + blkPadY);
+		sl.draw(canvas);
+		canvas.restore();
+	}
+	
 	protected void bufferDraw()
 	{
 		if (bufCV == null || bufBM == null || bufBM.getWidth() != viewWidth
@@ -86,16 +103,18 @@ public class TimeTableView extends View
 		bufCV.clipRect(0, 0, viewWidth, viewHeight);
 		bufCV.drawColor(0xffdde2e7);
 
-		for (LessonBlock lb : lessons)
-		{
-			drawBlock(bufCV, lb);
-		}
 		float baseY = 0;
 		for (int a = 0; a < 12; a++)
 		{
 			baseY += height;
 			bufCV.drawLine(0, baseY, viewWidth, baseY, paintLine);
 		}
+		
+		for (LessonBlock lb : lessons)
+		{
+			drawBlock(bufCV, lb);
+		}
+		
 		isReBuf = false;
 	}
 
@@ -107,23 +126,5 @@ public class TimeTableView extends View
 			bufferDraw();
 		canvas.drawBitmap(bufBM, 0, 0, null);
 
-	}
-
-	private void drawBlock(Canvas canvas, LessonBlock lb)
-	{
-		paintBlk.setColor(lb.getBlkColor());
-		int left = lb.getWeekDay() * width;
-		int[] time = lb.getTime();
-		int top = time[0] * height;
-		int last = time[1] - time[0];
-		canvas.drawRect(left, top, left + width, top + last * height, paintBlk);
-
-		StaticLayout sl = new StaticLayout(lb.getName(), paintTxt,
-				(int) (width - blkPadX * 2), Alignment.ALIGN_NORMAL, 1.0f, 0.0f,
-				true);
-		canvas.save();
-		canvas.translate(left + blkPadX, top + blkPadY);
-		sl.draw(canvas);
-		canvas.restore();
 	}
 }

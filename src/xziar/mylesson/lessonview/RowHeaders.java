@@ -45,7 +45,7 @@ public class RowHeaders extends View
 		super(context);
 
 		viewWidth = this.width = SizeUtil.dp2px(width);
-		this.height = SizeUtil.dp2px(rowHeight);
+		this.height = SizeUtil.dp2px(rowHeight) + 1;
 		viewHeight = this.height * 12;
 
 		paintTime.setTextAlign(Paint.Align.CENTER);
@@ -63,7 +63,6 @@ public class RowHeaders extends View
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
 	{
-		// super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		Log.v("tester", "Row onMeasure " + viewWidth + "," + viewHeight);
 		setMeasuredDimension(viewWidth, viewHeight);
 	}

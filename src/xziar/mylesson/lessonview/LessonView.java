@@ -10,6 +10,7 @@ import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import xziar.mylesson.data.LessonBean;
 
@@ -24,7 +25,8 @@ public class LessonView extends ViewGroup
 	private Rect rectRH = new Rect(), rectCH = new Rect(), rectTTV = new Rect();
 	private Rect loRH = new Rect(), loCH = new Rect(), loTTV = new Rect();
 	private int moveX = 0, moveY = 0, lastX, lastY, maxDX, maxDY;
-	private boolean isMove = false;
+	private boolean isTTV = false, isMoved = false;
+	private View objTouch;
 
 	public LessonView(Context context)
 	{
@@ -53,29 +55,24 @@ public class LessonView extends ViewGroup
 		paintLine.setColor(Color.GRAY);
 		paintLine.setStrokeWidth(2.0f);
 		paintLine.setStyle(Style.STROKE);
-		
-/*		LessonBean lb = new LessonBean();
-		lb.timeWeek = lb.timeFrom = 0;
-		lb.timeTo = 3;
-		lb.lessonName= "手机软件开发";
-		lb.color = 0xff40b060;
-		ttv.lessons.add(lb);
-		LessonBean lb2 = new LessonBean();
-		lb2.timeWeek = lb2.timeFrom = 5;
-		lb2.timeTo = 7;
-		lb2.lessonName= "人机交互";
-		lb2.color = 0xffb040b0;
-		ttv.lessons.add(lb2);*/
-		
-		for(int a=0;a<7;a++)
+
+		/*
+		 * LessonBean lb = new LessonBean(); lb.timeWeek = lb.timeFrom = 0;
+		 * lb.timeTo = 3; lb.lessonName= "手机软件开发"; lb.color = 0xff40b060;
+		 * ttv.lessons.add(lb); LessonBean lb2 = new LessonBean(); lb2.timeWeek
+		 * = lb2.timeFrom = 5; lb2.timeTo = 7; lb2.lessonName= "人机交互"; lb2.color
+		 * = 0xffb040b0; ttv.lessons.add(lb2);
+		 */
+
+		for (int a = 0; a < 7; a++)
 		{
-			for(int b=0;b<12;b+=2)
+			for (int b = 0; b < 12; b += 2)
 			{
 				LessonBean lb = new LessonBean();
 				lb.timeWeek = a;
 				lb.timeFrom = b;
-				lb.timeTo = b+2;
-				lb.lessonName= "手机软件开发";
+				lb.timeTo = b + 2;
+				lb.lessonName = "手机软件开发";
 				lb.color = 0xff40b060;
 				ttv.lessons.add(lb);
 			}
@@ -84,6 +81,8 @@ public class LessonView extends ViewGroup
 
 	private void scrollElement(int dx, int dy)
 	{
+		lastX += dx;
+		lastY += dy;
 		moveX = Math.max(maxDX, Math.min(0, moveX + dx));
 		moveY = Math.max(maxDY, Math.min(0, moveY + dy));
 
@@ -182,33 +181,37 @@ public class LessonView extends ViewGroup
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent e)
 	{
-		Log.v("tester", "dispatchTouchEvent");
 		switch (e.getActionMasked())
 		{
 		case MotionEvent.ACTION_DOWN:
+			isMoved = isTTV = false;
 			lastX = (int) e.getRawX();
 			lastY = (int) e.getRawY();
 			if (rectTTV.contains(lastX, lastY))
 			{
+				objTouch = ttv;
 				ttv.onTouchEvent(e);
-				isMove = true;
+				isTTV = true;
 			}
 			else if (rectRH.contains(lastX, lastY))
 			{
+				objTouch = rowH;
 				rowH.onTouchEvent(e);
 			}
 			else if (rectCH.contains(lastX, lastY))
 			{
+				objTouch = colH;
 				colH.onTouchEvent(e);
 			}
 			Log.v("tester", "Touch_Down at " + lastX + "," + lastY);
 			break;
 		case MotionEvent.ACTION_MOVE:
-			if (isMove)
+			if (isTTV)
 				onTouchEvent(e);
 			break;
 		case MotionEvent.ACTION_UP:
-			isMove = false;
+			if (!isMoved)
+				objTouch.onTouchEvent(e);
 			break;
 		}
 
@@ -220,15 +223,14 @@ public class LessonView extends ViewGroup
 	@Override
 	public boolean onTouchEvent(MotionEvent e)
 	{
-		Log.v("tester", "onTouchEvent");
-
 		switch (e.getActionMasked())
 		{
 		case MotionEvent.ACTION_MOVE:
-			int newX = (int) e.getRawX(), newY = (int) e.getRawY();
-			int dx = newX - lastX, dy = newY - lastY;
-			lastX = newX;
-			lastY = newY;
+			int dx = (int) e.getRawX() - lastX, dy = (int) e.getRawY() - lastY;
+			if (dx == 0 && dy == 0)
+				return true;
+			else
+				isMoved = true;
 			Log.v("tester", "Touch_Move " + dx + "," + dy);
 
 			scrollElement(dx, dy);
