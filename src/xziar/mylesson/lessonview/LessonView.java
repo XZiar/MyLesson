@@ -63,40 +63,12 @@ public class LessonView extends ViewGroup
 		paintLine.setColor(Color.GRAY);
 		paintLine.setStrokeWidth(2.0f);
 		paintLine.setStyle(Style.STROKE);
-
-		/*
-		 * LessonBean lb = new LessonBean(); lb.timeWeek = lb.timeFrom = 0;
-		 * lb.timeTo = 3; lb.lessonName= "手机软件开发"; lb.color = 0xff40b060;
-		 * ttv.lessons.add(lb); LessonBean lb2 = new LessonBean(); lb2.timeWeek
-		 * = lb2.timeFrom = 5; lb2.timeTo = 7; lb2.lessonName= "人机交互"; lb2.color
-		 * = 0xffb040b0; ttv.lessons.add(lb2);
-		 */
 		
 		ttv.setChooseListener(new OnChooseListener()
 		{
 			@Override
 			public void onChoose(LessonBlock lb)
 			{
-				/*AlertDialog.Builder builder = new AlertDialog.Builder(
-						getContext());
-				builder.setMessage(lb.getName() + "\n" + lb.getAppendix()
-						+ "\nLID=" + ((LessonBean)(lb)).LID)
-						.setPositiveButton("确定",
-								new DialogInterface.OnClickListener()
-								{
-									public void onClick(DialogInterface arg0,
-											int arg1)
-									{
-									}
-								});
-				// 透明
-				final AlertDialog dlg = builder.create();
-				Window window = dlg.getWindow();
-				WindowManager.LayoutParams lp = window.getAttributes();
-				lp.alpha = 0.9f;
-				window.setAttributes(lp);
-				dlg.show();*/
-				
 				OnChooseItem.onChoose(lb);
 			}
 		});

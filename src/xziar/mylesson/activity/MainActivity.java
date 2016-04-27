@@ -1,19 +1,16 @@
 package xziar.mylesson.activity;
 
+import android.app.Activity;
+import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Window;
 import xziar.mylesson.R;
 import xziar.mylesson.data.DBUtil;
 import xziar.mylesson.data.LessonBean;
 import xziar.mylesson.lessonview.LessonBlock;
 import xziar.mylesson.lessonview.LessonView;
 import xziar.mylesson.lessonview.LessonView.OnChooseItemListener;
-
-import java.util.ArrayList;
-
-import android.app.Activity;
-import android.content.Context;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Window;
 
 public class MainActivity extends Activity
 {
@@ -33,7 +30,7 @@ public class MainActivity extends Activity
 		lview = (LessonView) findViewById(R.id.lv);
 		
 		DBUtil.onInit(getFilesDir());
-		
+		//ActionBar ab = new ActionBar();
 		for (int a = 0; a < 7; a++)
 		{
 			for (int b = 0; b < 12; b += 4)
@@ -57,7 +54,6 @@ public class MainActivity extends Activity
 				DBUtil.delete((LessonBean)lb);
 				lview.setData(DBUtil.query());
 			}
-			
 		});
 	}
 	
