@@ -3,7 +3,9 @@ package xziar.mylesson.lessonview;
 import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -14,7 +16,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import xziar.mylesson.data.LessonBean;
+import xziar.mylesson.lessonview.TimeTableView.OnChooseListener;
 import xziar.mylesson.util.SizeUtil;
 
 public class LessonView extends ViewGroup
@@ -71,18 +76,44 @@ public class LessonView extends ViewGroup
 		ArrayList<LessonBlock> ls = new ArrayList<LessonBlock>();
 		for (int a = 0; a < 7; a++)
 		{
-			for (int b = 0; b < 12; b += 2)
+			for (int b = 0; b < 12; b += 4)
 			{
 				LessonBean lb = new LessonBean();
 				lb.timeWeek = a;
 				lb.timeFrom = b;
-				lb.timeLast = 2;
+				lb.timeLast = 3;
 				lb.lessonName = "手机软件开发";
+				lb.place = a + "楼" + b + "室";
 				lb.color = 0xff40b060;
 				ls.add(lb);
 			}
 		}
 		ttv.setLessons(ls);
+		ttv.setChooseListener(new OnChooseListener()
+		{
+			@Override
+			public void onChoose(LessonBlock lb)
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						getContext());
+				builder.setMessage(lb.getName() + "\n" + lb.getAppendix())
+						.setPositiveButton("确定",
+								new DialogInterface.OnClickListener()
+								{
+									public void onClick(DialogInterface arg0,
+											int arg1)
+									{
+									}
+								});
+				// 透明
+				final AlertDialog dlg = builder.create();
+				Window window = dlg.getWindow();
+				WindowManager.LayoutParams lp = window.getAttributes();
+				lp.alpha = 0.9f;
+				window.setAttributes(lp);
+				dlg.show();
+			}
+		});
 	}
 
 	private boolean scrollElement(int dx, int dy)

@@ -28,7 +28,6 @@ public class TimeTableView extends View implements OnTouchListener
 	protected Bitmap bufBM = null;
 	protected Canvas bufCV = null;
 	protected Paint paintLine = new Paint(Paint.ANTI_ALIAS_FLAG);
-	protected Paint paintBlk = new Paint(Paint.ANTI_ALIAS_FLAG);
 	protected TextPaint paintTxt = new TextPaint(Paint.ANTI_ALIAS_FLAG);
 
 	int bgColor = 0xffdde2e7;
@@ -60,14 +59,13 @@ public class TimeTableView extends View implements OnTouchListener
 		viewHeight = height * 12;
 		viewWidth = width * 7;
 		blkPadX = width / 8f;
-		blkPadY = height / 8f;
+		blkPadY = height / 10f;
 
 		paintLine.setColor(Color.LTGRAY);
 		paintLine.setStrokeWidth(1.0f);
 		paintLine.setStyle(Style.STROKE);
-		paintTxt.setTextSize(width * 0.24f);
 		paintTxt.setColor(Color.WHITE);
-
+		paintTxt.setTextSize(width * 0.24f);
 	}
 
 	@Override
@@ -79,22 +77,34 @@ public class TimeTableView extends View implements OnTouchListener
 
 	private void drawBlock(Canvas canvas, LessonBlock lb)
 	{
-		int left = lb.getWeekDay() * width;
-		int top = lb.getTime() * height;
-		int bottom = top + lb.getLast() * height;
-		for (int t = lb.getTime(), w = lb.getWeekDay(), b = lb.getLast(); b-- > 0;)
+		int lbTime = lb.getTime(), lbWD = lb.getWeekDay(),
+				lbLast = lb.getLast();
+		final int left = lbWD * width, top = lbTime * height,
+				bottom = top + lbLast * height, halfH = height * lbLast / 2;
+		for (; lbLast-- > 0;)
 		{
-			lessonMap[w][t++] = lb;
+			lessonMap[lbWD][lbTime++] = lb;
 		}
-
-		paintBlk.setColor(lb.getBlkColor());
-		canvas.drawRect(left, top, left + width - 1, bottom - 1, paintBlk);
+		canvas.save();
+		canvas.clipRect(left, top, left + width - 1, bottom - 1);
+		canvas.drawColor(lb.getBlkColor());
+		canvas.restore();
 
 		StaticLayout sl = new StaticLayout(lb.getName(), paintTxt,
 				(int) (width - blkPadX * 2), Alignment.ALIGN_NORMAL, 1.0f, 0.0f,
 				true);
 		canvas.save();
 		canvas.translate(left + blkPadX, top + blkPadY);
+		canvas.clipRect(0, 0, width, height);
+		sl.draw(canvas);
+		canvas.restore();
+
+		sl = new StaticLayout(lb.getAppendix(), paintTxt,
+				(int) (width - blkPadX * 2), Alignment.ALIGN_NORMAL, 1.0f, 0.0f,
+				true);
+		canvas.save();
+		canvas.translate(left + blkPadX, top + halfH);
+		canvas.clipRect(0, 0, width, halfH);
 		sl.draw(canvas);
 		canvas.restore();
 	}
@@ -149,7 +159,7 @@ public class TimeTableView extends View implements OnTouchListener
 			int w = dx / width, t = dy / height;
 			String txt = "click week " + w + " time " + t;
 			Toast.makeText(getContext(), txt, Toast.LENGTH_SHORT).show();
-			if(chooseListener != null)
+			if (chooseListener != null)
 				chooseListener.onChoose(lessonMap[w][t]);
 			break;
 		}
@@ -165,7 +175,7 @@ public class TimeTableView extends View implements OnTouchListener
 	{
 		this.chooseListener = chooseListener;
 	}
-	
+
 	public void setLessons(ArrayList<LessonBlock> lessons)
 	{
 		this.lessons = lessons;
