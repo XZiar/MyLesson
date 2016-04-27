@@ -4,6 +4,7 @@
 package xziar.mylesson.lessonview;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -35,7 +36,7 @@ public class TimeTableView extends View implements OnTouchListener
 	private float blkPadX, blkPadY;
 	private boolean isReBuf = true;
 	private LessonBlock[][] lessonMap = null;
-	private ArrayList<LessonBlock> lessons = new ArrayList<LessonBlock>();
+	private List<LessonBlock> lessons = new ArrayList<LessonBlock>();
 
 	private OnChooseListener chooseListener = null;
 
@@ -158,15 +159,15 @@ public class TimeTableView extends View implements OnTouchListener
 			int dx = (int) e.getX() - getLeft(), dy = (int) e.getY() - getTop();
 			int w = dx / width, t = dy / height;
 			String txt = "click week " + w + " time " + t;
-			Toast.makeText(getContext(), txt, Toast.LENGTH_SHORT).show();
-			if (chooseListener != null)
+			Log.v("tester", txt);
+			if (chooseListener != null && lessonMap[w][t] != null)
 				chooseListener.onChoose(lessonMap[w][t]);
 			break;
 		}
 		return false;
 	}
 
-	public interface OnChooseListener
+	interface OnChooseListener
 	{
 		public void onChoose(LessonBlock lb);
 	}
@@ -176,9 +177,9 @@ public class TimeTableView extends View implements OnTouchListener
 		this.chooseListener = chooseListener;
 	}
 
-	public void setLessons(ArrayList<LessonBlock> lessons)
+	public void setLessons(List<LessonBlock> ls)
 	{
-		this.lessons = lessons;
+		this.lessons = ls;
 		bufferDraw();
 	}
 }

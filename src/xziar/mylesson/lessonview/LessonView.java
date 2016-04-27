@@ -1,23 +1,20 @@
 package xziar.mylesson.lessonview;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.Paint.Style;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import xziar.mylesson.data.LessonBean;
 import xziar.mylesson.lessonview.TimeTableView.OnChooseListener;
 import xziar.mylesson.util.SizeUtil;
@@ -28,6 +25,7 @@ public class LessonView extends ViewGroup
 	private ColumnHeaders colH = null;
 	private TimeTableView ttv = null;
 	protected Paint paintLine = new Paint(Paint.ANTI_ALIAS_FLAG);
+	private OnChooseItemListener OnChooseItem = null;
 
 	int bgColor = 0xfff7f7f7;
 	private Rect rectRH = new Rect(), rectCH = new Rect(), rectTTV = new Rect();
@@ -73,30 +71,16 @@ public class LessonView extends ViewGroup
 		 * = lb2.timeFrom = 5; lb2.timeTo = 7; lb2.lessonName= "人机交互"; lb2.color
 		 * = 0xffb040b0; ttv.lessons.add(lb2);
 		 */
-		ArrayList<LessonBlock> ls = new ArrayList<LessonBlock>();
-		for (int a = 0; a < 7; a++)
-		{
-			for (int b = 0; b < 12; b += 4)
-			{
-				LessonBean lb = new LessonBean();
-				lb.timeWeek = a;
-				lb.timeFrom = b;
-				lb.timeLast = 3;
-				lb.lessonName = "手机软件开发";
-				lb.place = a + "楼" + b + "室";
-				lb.color = 0xff40b060;
-				ls.add(lb);
-			}
-		}
-		ttv.setLessons(ls);
+		
 		ttv.setChooseListener(new OnChooseListener()
 		{
 			@Override
 			public void onChoose(LessonBlock lb)
 			{
-				AlertDialog.Builder builder = new AlertDialog.Builder(
+				/*AlertDialog.Builder builder = new AlertDialog.Builder(
 						getContext());
-				builder.setMessage(lb.getName() + "\n" + lb.getAppendix())
+				builder.setMessage(lb.getName() + "\n" + lb.getAppendix()
+						+ "\nLID=" + ((LessonBean)(lb)).LID)
 						.setPositiveButton("确定",
 								new DialogInterface.OnClickListener()
 								{
@@ -111,11 +95,25 @@ public class LessonView extends ViewGroup
 				WindowManager.LayoutParams lp = window.getAttributes();
 				lp.alpha = 0.9f;
 				window.setAttributes(lp);
-				dlg.show();
+				dlg.show();*/
+				
+				OnChooseItem.onChoose(lb);
 			}
 		});
 	}
-
+	public void setData(LessonBean[] lbs)
+	{
+		List<LessonBlock> ls = new ArrayList<>();
+		if(lbs != null)
+		{
+			for(LessonBean lb : lbs)
+				ls.add(lb);
+		}
+		Log.v("tester", "setData:"+ls.size());
+		ttv.setLessons(ls);
+		postInvalidate();
+	}
+	
 	private boolean scrollElement(int dx, int dy)
 	{
 		lastX = moveX;
@@ -268,7 +266,7 @@ public class LessonView extends ViewGroup
 				break;
 			else if (Math.abs(dx) + Math.abs(dy) > dDis)
 				isMoved = true;
-			Log.v("tester", "Touch_Move " + dx + "," + dy);
+			//Log.v("tester", "Touch_Move " + dx + "," + dy);
 
 			if (scrollElement(dx, dy))
 				invalidate();
@@ -282,4 +280,14 @@ public class LessonView extends ViewGroup
 		return true;
 	}
 
+	
+	public interface OnChooseItemListener
+	{
+		public void onChoose(LessonBlock lb);
+	}
+	public void SetOnChooseItemListener(OnChooseItemListener chooseListener)
+	{
+		this.OnChooseItem = chooseListener;
+	}
+	
 }

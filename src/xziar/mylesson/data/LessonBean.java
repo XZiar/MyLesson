@@ -4,6 +4,7 @@ import xziar.mylesson.lessonview.LessonBlock;
 
 public class LessonBean implements LessonBlock
 {
+	public int LID = -1;
 	public String lessonName = "";
 	public String place = "";
 	public int timeFrom, timeLast, timeWeek, weekFrom, weekTo;
