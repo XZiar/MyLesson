@@ -4,6 +4,7 @@
 package xziar.mylesson.lessonview;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -35,7 +36,7 @@ public class TimeTableView extends View implements OnTouchListener
 	private float blkPadX, blkPadY;
 	private boolean isReBuf = true;
 	private LessonBlock[][] lessonMap = null;
-	private ArrayList<LessonBlock> lessons = new ArrayList<LessonBlock>();
+	private List<LessonBlock> lessons = new ArrayList<LessonBlock>();
 
 	private OnChooseListener chooseListener = null;
 
@@ -176,9 +177,9 @@ public class TimeTableView extends View implements OnTouchListener
 		this.chooseListener = chooseListener;
 	}
 
-	public void setLessons(ArrayList<LessonBlock> lessons)
+	public void setLessons(List<LessonBlock> ls)
 	{
-		this.lessons = lessons;
+		this.lessons = ls;
 		bufferDraw();
 	}
 }

@@ -1,6 +1,8 @@
 package xziar.mylesson.lessonview;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -36,6 +38,7 @@ public class LessonView extends ViewGroup
 	private int locTX, locTY, maxDX, maxDY, dDis;
 	private boolean isTTV = false, isMoved = false;
 	private View objTouch;
+	public List<LessonBlock> ls = new ArrayList<LessonBlock>();
 
 	public LessonView(Context context)
 	{
@@ -73,21 +76,7 @@ public class LessonView extends ViewGroup
 		 * = lb2.timeFrom = 5; lb2.timeTo = 7; lb2.lessonName= "人机交互"; lb2.color
 		 * = 0xffb040b0; ttv.lessons.add(lb2);
 		 */
-		ArrayList<LessonBlock> ls = new ArrayList<LessonBlock>();
-		for (int a = 0; a < 7; a++)
-		{
-			for (int b = 0; b < 12; b += 4)
-			{
-				LessonBean lb = new LessonBean();
-				lb.timeWeek = a;
-				lb.timeFrom = b;
-				lb.timeLast = 3;
-				lb.lessonName = "手机软件开发";
-				lb.place = a + "楼" + b + "室";
-				lb.color = 0xff40b060;
-				ls.add(lb);
-			}
-		}
+		
 		ttv.setLessons(ls);
 		ttv.setChooseListener(new OnChooseListener()
 		{
@@ -115,7 +104,14 @@ public class LessonView extends ViewGroup
 			}
 		});
 	}
-
+	public void setData(LessonBean[] lbs)
+	{
+		ls.clear();
+		for(LessonBean lb : lbs)
+			ls.add(lb);
+		ttv.setLessons(ls);
+	}
+	
 	private boolean scrollElement(int dx, int dy)
 	{
 		lastX = moveX;
