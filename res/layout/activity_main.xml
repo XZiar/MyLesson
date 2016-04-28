@@ -16,21 +16,16 @@
             android:layout_width="wrap_content"
         	android:layout_height="match_parent"
         	actbar:Align="left"
+        	actbar:img="@drawable/icon_setting"
+        	android:onClick="onBtnSetting"
             />
-        <xziar.mylesson.view.actionbar.ActionBarButton 
-            android:layout_width="wrap_content"
-        	android:layout_height="match_parent"
-            />
+
         <xziar.mylesson.view.actionbar.ActionBarButton 
             android:layout_width="wrap_content"
         	android:layout_height="match_parent"
         	actbar:Align="right"
-            />
-        <xziar.mylesson.view.actionbar.ActionBarButton 
-            android:layout_width="wrap_content"
-        	android:layout_height="match_parent"
-        	actbar:img="#FF777777"
-        	actbar:Align="right"
+        	actbar:img="@drawable/icon_add"
+        	android:onClick="onBtnAdd"
             />
     	
     </xziar.mylesson.view.actionbar.SimpleActionBar>
