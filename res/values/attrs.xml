@@ -1,6 +1,6 @@
 <resources>
     <declare-styleable name="ActionBarElement">
-        <attr name="Align">
+        <attr name="align">
             <enum name="middle" value="0"/>
             <enum name="left" value="1"/>
             <enum name="right" value="2"/>
@@ -8,5 +8,8 @@
     </declare-styleable>
     <declare-styleable name="ACtionBarButton">
         <attr name="img" format="reference|color" />
+    </declare-styleable>
+    <declare-styleable name="LessonView">
+        <attr name="titleBG" format="reference|color" />
     </declare-styleable>
 </resources>

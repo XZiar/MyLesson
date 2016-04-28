@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetricsInt;
 import android.graphics.Paint.Style;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.graphics.Typeface;
 import android.view.View;
@@ -27,8 +28,7 @@ public class RowHeaders extends View
 	protected Paint paintCnt = new Paint(Paint.ANTI_ALIAS_FLAG);
 	protected Paint paintLine = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-	int bgColor = 0xffdde2e7;
-	private boolean isReBuf = true;
+	private boolean isNeedReBuf = true;
 	private int viewWidth, viewHeight, width, height;// in px
 
 	/**
@@ -80,7 +80,10 @@ public class RowHeaders extends View
 		
 		Log.v("tester", "RowH bufDraw HW:" + bufCV.isHardwareAccelerated());
 		bufCV.clipRect(0, 0, viewWidth, viewHeight);
-		bufCV.drawColor(bgColor);
+		
+		Drawable bg = getBackground();
+		bg.setBounds(0, 0, viewWidth, viewHeight);
+		bg.draw(bufCV);
 
 		FontMetricsInt fontMetrics = paintTime.getFontMetricsInt();
 		float baselineTime = (height * 1 / 2 - fontMetrics.top
@@ -97,15 +100,22 @@ public class RowHeaders extends View
 			baseY += height;
 			bufCV.drawLine(0, baseY, width, baseY, paintLine);
 		}
-		isReBuf = false;
+		isNeedReBuf = false;
 	}
 	
 	@Override
 	protected void onDraw(Canvas canvas)
 	{
-		if(isReBuf)
+		if(isNeedReBuf)
 			bufferDraw();
 		canvas.drawBitmap(bufBM, 0, 0, null);
 		
+	}
+	
+	@Override
+	public void setBackground(Drawable background)
+	{
+		super.setBackground(background);
+		isNeedReBuf = true;
 	}
 }

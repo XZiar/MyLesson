@@ -13,6 +13,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.drawable.Drawable;
 import android.text.Layout.Alignment;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -30,10 +31,9 @@ public class TimeTableView extends View implements OnTouchListener
 	protected Paint paintLine = new Paint(Paint.ANTI_ALIAS_FLAG);
 	protected TextPaint paintTxt = new TextPaint(Paint.ANTI_ALIAS_FLAG);
 
-	int bgColor = 0xffdde2e7;
 	private int viewWidth, viewHeight, width, height;
 	private float blkPadX, blkPadY;
-	private boolean isReBuf = true;
+	private boolean isNeedReBuf = true;
 	private LessonBlock[][] lessonMap = null;
 	private List<LessonBlock> lessons = new ArrayList<LessonBlock>();
 
@@ -121,7 +121,10 @@ public class TimeTableView extends View implements OnTouchListener
 
 		Log.v("tester", "TTV bufDraw HW:" + bufCV.isHardwareAccelerated());
 		bufCV.clipRect(0, 0, viewWidth, viewHeight);
-		bufCV.drawColor(bgColor);
+		
+		Drawable bg = getBackground();
+		bg.setBounds(0, 0, viewWidth, viewHeight);
+		bg.draw(bufCV);
 
 		float baseY = 0;
 		for (int a = 0; a < 12; a++)
@@ -135,14 +138,14 @@ public class TimeTableView extends View implements OnTouchListener
 			drawBlock(bufCV, lb);
 		}
 
-		isReBuf = false;
+		isNeedReBuf = false;
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas)
 	{
 		// Log.v("tester", "TTV draw HW:" + canvas.isHardwareAccelerated());
-		if (isReBuf)
+		if (isNeedReBuf)
 			bufferDraw();
 		canvas.drawBitmap(bufBM, 0, 0, null);
 
@@ -179,6 +182,15 @@ public class TimeTableView extends View implements OnTouchListener
 	public void setLessons(List<LessonBlock> ls)
 	{
 		this.lessons = ls;
-		bufferDraw();
+		isNeedReBuf = true;
 	}
+
+	@Override
+	public void setBackground(Drawable background)
+	{
+		super.setBackground(background);
+		isNeedReBuf = true;
+	}
+	
+	
 }

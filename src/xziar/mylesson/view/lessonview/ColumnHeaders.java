@@ -10,6 +10,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetricsInt;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,7 +31,6 @@ public class ColumnHeaders extends View implements OnTouchListener
 	protected Canvas bufCV = null;
 	
 	private boolean isReBuf = true;
-	int bgColor = 0xfff7f7f7;
 	private int viewWidth, viewHeight, width, height;// in px
 
 	/**
@@ -48,6 +49,9 @@ public class ColumnHeaders extends View implements OnTouchListener
 		setLayerType(View.LAYER_TYPE_HARDWARE, null);
 		setOnTouchListener(this);
 
+		if (getBackground() == null)
+			setBackground(new ColorDrawable(0xfff7f7f7));
+		
 		this.width = SizeUtil.dp2px(columnWidth) + 1;
 		viewHeight = this.height = SizeUtil.dp2px(height);
 		viewWidth = this.width * 7;
@@ -79,7 +83,10 @@ public class ColumnHeaders extends View implements OnTouchListener
 		
 		Log.v("tester", "colH bufDraw HW:" + bufCV.isHardwareAccelerated());
 		bufCV.clipRect(0, 0, viewWidth, viewHeight);
-		bufCV.drawColor(bgColor);
+		
+		Drawable bg = getBackground();
+		bg.setBounds(0, 0, viewWidth, viewHeight);
+		bg.draw(bufCV);
 
 		FontMetricsInt fontMetrics = paintDay.getFontMetricsInt();
 		float baselineDay = (height * 3 / 5 - fontMetrics.top - fontMetrics.bottom)

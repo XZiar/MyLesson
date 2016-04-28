@@ -24,7 +24,7 @@ public class ActionBarButton extends View implements ActionBarElement
 		btnImg = ta.getDrawable(R.styleable.ACtionBarButton_img);
 		ta.recycle();
 		ta = context.obtainStyledAttributes(attrs, R.styleable.ActionBarElement);
-		alignType = ta.getInt(R.styleable.ActionBarElement_Align, 0);
+		alignType = ta.getInt(R.styleable.ActionBarElement_align, 0);
 		ta.recycle();
 		init();
 	}
