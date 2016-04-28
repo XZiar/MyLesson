@@ -1,17 +1,19 @@
 package xziar.mylesson.view.actionbar;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import xziar.mylesson.util.SizeUtil;
 
 public class SimpleActionBar extends RelativeLayout
 {
 	private LinearLayout BarLeft, BarMid, BarRight;
+	private int pad = SizeUtil.dp2px(5);
 
 	public SimpleActionBar(Context context)
 	{
@@ -23,6 +25,10 @@ public class SimpleActionBar extends RelativeLayout
 			int defStyleAttr)
 	{
 		super(context, attrs, defStyleAttr);
+		TypedArray ta = context.obtainStyledAttributes(attrs,
+				new int[] { android.R.attr.layout_margin });
+		pad = ta.getDimensionPixelSize(0, 1);
+		ta.recycle();
 		init(context);
 	}
 
@@ -33,41 +39,36 @@ public class SimpleActionBar extends RelativeLayout
 
 	private void init(Context context)
 	{
-		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		BarLeft = new LinearLayout(context, null);
-		BarLeft.setLayoutParams(lp);
-		BarLeft.setOrientation(LinearLayout.HORIZONTAL);
-		RelativeLayout.LayoutParams parmL = new RelativeLayout.LayoutParams(lp);
+		RelativeLayout.LayoutParams parmL = new RelativeLayout.LayoutParams(
+				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		parmL.addRule(RelativeLayout.ALIGN_PARENT_START);
 		super.addView(BarLeft, -1, parmL);
-		
+
 		BarRight = new LinearLayout(context, null);
-		BarRight.setLayoutParams(lp);
-		BarRight.setOrientation(LinearLayout.HORIZONTAL);
-		RelativeLayout.LayoutParams parmR = new RelativeLayout.LayoutParams(lp);
+		RelativeLayout.LayoutParams parmR = new RelativeLayout.LayoutParams(
+				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		parmR.addRule(RelativeLayout.ALIGN_PARENT_END);
 		super.addView(BarRight, -1, parmR);
-		
+
 		BarMid = new LinearLayout(context, null);
-		BarMid.setLayoutParams(lp);
-		BarMid.setOrientation(LinearLayout.HORIZONTAL);
-		RelativeLayout.LayoutParams parmM = new RelativeLayout.LayoutParams(lp);
+		RelativeLayout.LayoutParams parmM = new RelativeLayout.LayoutParams(
+				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		parmM.addRule(RelativeLayout.CENTER_IN_PARENT);
 		super.addView(BarMid, -1, parmM);
-		
+
 		Log.v("tester", "ActBar from ctx:" + context.getClass().getName());
 	}
 
 	@Override
 	public void addView(View child, int index, ViewGroup.LayoutParams params)
 	{
-		Log.v("tester", "----- addView,view,idx,param");
+		Log.v("tester", "addView,params=" + params.getClass());
 		Class<?>[] viewifs = child.getClass().getInterfaces();
 		boolean isAdd = false;
 		for (Class<?> viewif : viewifs)
 		{
-			if (viewif == xziar.mylesson.view.actionbar.ActionBarElement.class)
+			if (viewif == ActionBarElement.class)
 			{
 				isAdd = true;// can add
 				break;
@@ -75,7 +76,9 @@ public class SimpleActionBar extends RelativeLayout
 		}
 		if (!isAdd)
 			return;
+		
 		ActionBarElement abe = (ActionBarElement) child;
+		child.setPaddingRelative(pad, 0, pad, 0);
 		switch (abe.getAlign())
 		{
 		case center:

@@ -9,12 +9,11 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import xziar.mylesson.R;
-import xziar.mylesson.util.SizeUtil;
 
 public class ActionBarButton extends View implements ActionBarElement
 {
 	private Drawable btnImg = null;
-	private int blkSize;
+	private int width, height;
 	int alignType = 0;
 
 	public ActionBarButton(Context context, AttributeSet attrs,
@@ -44,25 +43,31 @@ public class ActionBarButton extends View implements ActionBarElement
 
 	private void init()
 	{
-		blkSize = SizeUtil.dp2px(32);
 		if (btnImg == null)
-		{
 			btnImg = new ColorDrawable(0xffff7777);
-			Log.v("tester", "color drawable:" + btnImg.getIntrinsicWidth() + ","
-					+ btnImg.getIntrinsicHeight());
-		}
 	}
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
 	{
-		setMeasuredDimension(blkSize, blkSize);
+        height = MeasureSpec.getSize(heightMeasureSpec);  
+        
+        if(btnImg.getClass() == ColorDrawable.class)
+		{
+			width = height;
+		}
+		else
+		{
+			width = btnImg.getIntrinsicWidth() * height / btnImg.getIntrinsicHeight();
+		}
+		setMeasuredDimension(width + getPaddingStart() + getPaddingEnd(), height);
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas)
 	{
-		btnImg.setBounds(0, 0, blkSize, blkSize);
+		int pad = getPaddingStart();
+		btnImg.setBounds(pad, 0, width + pad, height);
 		btnImg.draw(canvas);
 	}
 

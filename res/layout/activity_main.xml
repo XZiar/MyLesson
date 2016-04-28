@@ -9,26 +9,26 @@
     <xziar.mylesson.view.actionbar.SimpleActionBar
         android:id="@+id/actbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp">
+        android:layout_height="32dp"
+        android:layout_margin="5dp">
 
         <xziar.mylesson.view.actionbar.ActionBarButton 
             android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
+        	android:layout_height="match_parent"
         	actbar:Align="left"
             />
         <xziar.mylesson.view.actionbar.ActionBarButton 
             android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
+        	android:layout_height="match_parent"
             />
         <xziar.mylesson.view.actionbar.ActionBarButton 
             android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
+        	android:layout_height="match_parent"
         	actbar:Align="right"
             />
         <xziar.mylesson.view.actionbar.ActionBarButton 
             android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
+        	android:layout_height="match_parent"
         	actbar:img="#FF777777"
         	actbar:Align="right"
             />

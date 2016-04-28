@@ -77,7 +77,7 @@ public class ColumnHeaders extends View implements OnTouchListener
 			bufCV = new Canvas(bufBM);
 		}
 		
-		Log.v("tester", "RowH bufDraw HW:" + bufCV.isHardwareAccelerated());
+		Log.v("tester", "colH bufDraw HW:" + bufCV.isHardwareAccelerated());
 		bufCV.clipRect(0, 0, viewWidth, viewHeight);
 		bufCV.drawColor(bgColor);
 
