@@ -11,5 +11,6 @@
     </declare-styleable>
     <declare-styleable name="LessonView">
         <attr name="titleBG" format="reference|color" />
+        <attr name="blkSize" format="integer" />
     </declare-styleable>
 </resources>

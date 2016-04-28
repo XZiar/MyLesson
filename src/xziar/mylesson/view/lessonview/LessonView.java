@@ -38,6 +38,7 @@ public class LessonView extends ViewGroup
 	private int locTX, locTY, maxDX, maxDY, dDis;
 	private boolean isTTV = false, isMoved = false;
 	private View objTouch;
+	private int blkSize = 56;
 
 	public LessonView(Context context)
 	{
@@ -56,13 +57,13 @@ public class LessonView extends ViewGroup
 		TypedArray ta = context.obtainStyledAttributes(attrs,
 				R.styleable.LessonView);
 		titleBG = ta.getDrawable(R.styleable.LessonView_titleBG);
+		blkSize = ta.getInt(R.styleable.LessonView_blkSize, 56);
 		ta.recycle();
 		init(context);
 	}
 
 	private void init(Context context)
 	{
-		final int blkSize = 56;
 		dDis = SizeUtil.dp2px(blkSize) / 10;
 		rowH = new RowHeaders(context, 38, blkSize);
 		colH = new ColumnHeaders(context, blkSize, 44);

@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/actBarColor"
     tools:context="${relativePackage}.${activityClass}" >
 
     <xziar.mylesson.view.actionbar.SimpleActionBar
         android:id="@+id/actbar"
         android:layout_width="match_parent"
         android:layout_height="32dp"
-        android:layout_margin="5dp"
-        android:background="#fff7f7f7">
+        android:layout_margin="5dp">
 
         <xziar.mylesson.view.actionbar.ActionBarButton 
             android:layout_width="wrap_content"
@@ -35,8 +35,9 @@
         android:id="@+id/lv"
         android:layout_width="match_parent"
         android:layout_height="match_parent" 
-        android:background="#ffdde2e7"
-        actbar:titleBG="#fff7f7f7"
+        android:background="@color/baseBGColor"
+        actbar:titleBG="@color/actBarColor"
+        actbar:blkSize="56"
         />
 
 </LinearLayout>
