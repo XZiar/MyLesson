@@ -1,7 +1,7 @@
 /**
  * @author XZiar
  */
-package xziar.mylesson.lessonview;
+package xziar.mylesson.view.lessonview;
 
 import java.util.ArrayList;
 import java.util.List;

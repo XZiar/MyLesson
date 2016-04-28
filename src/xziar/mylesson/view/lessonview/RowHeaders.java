@@ -1,7 +1,7 @@
 /**
  * @author XZiar
  */
-package xziar.mylesson.lessonview;
+package xziar.mylesson.view.lessonview;
 
 import android.content.Context;
 import android.graphics.Bitmap;

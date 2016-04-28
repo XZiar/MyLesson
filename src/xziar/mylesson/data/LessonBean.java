@@ -1,6 +1,6 @@
 package xziar.mylesson.data;
 
-import xziar.mylesson.lessonview.LessonBlock;
+import xziar.mylesson.view.lessonview.LessonBlock;
 
 public class LessonBean implements LessonBlock
 {

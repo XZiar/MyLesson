@@ -5,13 +5,28 @@
     android:orientation="vertical"
     tools:context="${relativePackage}.${activityClass}" >
 
-    <TextView
+    <xziar.mylesson.view.actionbar.SimpleActionBar
+        android:id="@+id/actbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="hello there">
-    </TextView>
+        android:layout_height="wrap_content">
+        
+        <TextView
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_gravity="right"
+        	android:text="hello R">
+    	</TextView>
+    	
+        <TextView
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_gravity="left"
+        	android:text="i'm L">
+    	</TextView>
+    	
+    </xziar.mylesson.view.actionbar.SimpleActionBar>
 
-    <xziar.mylesson.lessonview.LessonView
+    <xziar.mylesson.view.lessonview.LessonView
         android:id="@+id/lv"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

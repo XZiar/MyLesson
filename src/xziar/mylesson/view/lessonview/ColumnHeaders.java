@@ -1,7 +1,7 @@
 /**
  * @author XZiar
  */
-package xziar.mylesson.lessonview;
+package xziar.mylesson.view.lessonview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

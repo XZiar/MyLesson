@@ -1,4 +1,4 @@
-package xziar.mylesson.lessonview;
+package xziar.mylesson.view.lessonview;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +16,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import xziar.mylesson.data.LessonBean;
-import xziar.mylesson.lessonview.TimeTableView.OnChooseListener;
 import xziar.mylesson.util.SizeUtil;
+import xziar.mylesson.view.lessonview.TimeTableView.OnChooseListener;
 
 public class LessonView extends ViewGroup
 {

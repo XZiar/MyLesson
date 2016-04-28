@@ -8,9 +8,9 @@ import android.view.Window;
 import xziar.mylesson.R;
 import xziar.mylesson.data.DBUtil;
 import xziar.mylesson.data.LessonBean;
-import xziar.mylesson.lessonview.LessonBlock;
-import xziar.mylesson.lessonview.LessonView;
-import xziar.mylesson.lessonview.LessonView.OnChooseItemListener;
+import xziar.mylesson.view.lessonview.LessonBlock;
+import xziar.mylesson.view.lessonview.LessonView;
+import xziar.mylesson.view.lessonview.LessonView.OnChooseItemListener;
 
 public class MainActivity extends Activity
 {
