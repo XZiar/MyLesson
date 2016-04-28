@@ -1,0 +1,12 @@
+<resources>
+    <declare-styleable name="ActionBarElement">
+        <attr name="Align">
+            <enum name="middle" value="0"/>
+            <enum name="left" value="1"/>
+            <enum name="right" value="2"/>
+        </attr>
+    </declare-styleable>
+    <declare-styleable name="ACtionBarButton">
+        <attr name="img" format="reference|color" />
+    </declare-styleable>
+</resources>

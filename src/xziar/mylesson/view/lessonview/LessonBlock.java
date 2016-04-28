@@ -1,4 +1,4 @@
-package xziar.mylesson.lessonview;
+package xziar.mylesson.view.lessonview;
 
 public interface LessonBlock
 {

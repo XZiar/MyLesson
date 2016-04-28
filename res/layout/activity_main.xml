@@ -1,12 +1,38 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:actbar="http://schemas.android.com/apk/res/xziar.mylesson"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="${relativePackage}.${activityClass}" >
 
-   <xziar.mylesson.lessonview.LessonView
-       android:id="@+id/lv"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent" />
-    
-</RelativeLayout>
+    <xziar.mylesson.view.actionbar.SimpleActionBar
+        android:id="@+id/actbar"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_margin="5dp">
+
+        <xziar.mylesson.view.actionbar.ActionBarButton 
+            android:layout_width="wrap_content"
+        	android:layout_height="match_parent"
+        	actbar:Align="left"
+        	actbar:img="@drawable/icon_setting"
+        	android:onClick="onBtnSetting"
+            />
+
+        <xziar.mylesson.view.actionbar.ActionBarButton 
+            android:layout_width="wrap_content"
+        	android:layout_height="match_parent"
+        	actbar:Align="right"
+        	actbar:img="@drawable/icon_add"
+        	android:onClick="onBtnAdd"
+            />
+    	
+    </xziar.mylesson.view.actionbar.SimpleActionBar>
+
+    <xziar.mylesson.view.lessonview.LessonView
+        android:id="@+id/lv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

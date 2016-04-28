@@ -1,7 +1,7 @@
 /**
  * @author XZiar
  */
-package xziar.mylesson.lessonview;
+package xziar.mylesson.view.lessonview;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.widget.Toast;
 import xziar.mylesson.util.SizeUtil;
 
 @SuppressLint("ClickableViewAccessibility")
