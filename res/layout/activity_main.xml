@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:actbar="http://schemas.android.com/apk/res/xziar.mylesson"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -8,21 +9,29 @@
     <xziar.mylesson.view.actionbar.SimpleActionBar
         android:id="@+id/actbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        
-        <TextView
-        	android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+
+        <xziar.mylesson.view.actionbar.ActionBarButton 
+            android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:layout_gravity="right"
-        	android:text="hello R">
-    	</TextView>
-    	
-        <TextView
-        	android:layout_width="wrap_content"
+        	actbar:Align="left"
+            />
+        <xziar.mylesson.view.actionbar.ActionBarButton 
+            android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:layout_gravity="left"
-        	android:text="i'm L">
-    	</TextView>
+            />
+        <xziar.mylesson.view.actionbar.ActionBarButton 
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	actbar:Align="right"
+            />
+        <xziar.mylesson.view.actionbar.ActionBarButton 
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	actbar:img="#ff777777"
+        	actbar:Align="right"
+            />
     	
     </xziar.mylesson.view.actionbar.SimpleActionBar>
 

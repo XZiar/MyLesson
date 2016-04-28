@@ -1,16 +1,13 @@
 package xziar.mylesson.view.actionbar;
 
-import java.lang.reflect.Array;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
-public class SimpleActionBar extends LinearLayout
+public class SimpleActionBar extends RelativeLayout
 {
-
 	public SimpleActionBar(Context context)
 	{
 		super(context);
@@ -41,13 +38,31 @@ public class SimpleActionBar extends LinearLayout
 		Log.v("tester", "----- addView,view,idx,param");
 		Class<?>[] viewifs = child.getClass().getInterfaces();
 		boolean isAdd = false;
-		for(Class<?> viewif : viewifs)
+		for (Class<?> viewif : viewifs)
 		{
-			if(viewif == xziar.mylesson.view.lessonview.LessonBlock.class)
-				isAdd = true;//can add
+			if (viewif == xziar.mylesson.view.actionbar.ActionBarElement.class)
+			{
+				isAdd = true;// can add
+				break;
+			}
 		}
-		if(isAdd)
-			super.addView(child, index, params);
+		if (!isAdd)
+			return;
+		ActionBarElement abe = (ActionBarElement)child;
+		RelativeLayout.LayoutParams parm = (RelativeLayout.LayoutParams) params;
+		switch(abe.getAlign())
+		{
+		case center:
+			parm.addRule(RelativeLayout.CENTER_IN_PARENT);
+			break;
+		case left:
+			parm.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+			break;
+		case right:
+			parm.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+			break;
+		}
+		super.addView(child, index, params);
 	}
 
 }
