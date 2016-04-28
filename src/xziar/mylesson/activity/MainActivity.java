@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -70,22 +71,9 @@ public class MainActivity extends Activity
 
 	public void onBtnAdd(View view)
 	{
-		AlertDialog.Builder builder = new AlertDialog.Builder(
-				MainActivity.this);
-		builder.setMessage("Add Lesson").setPositiveButton("È·¶¨",
-				new DialogInterface.OnClickListener()
-				{
-					public void onClick(DialogInterface arg0, int arg1)
-					{
-					}
-				});
-		// Í¸Ã÷
-		final AlertDialog dlg = builder.create();
-		Window window = dlg.getWindow();
-		WindowManager.LayoutParams lp = window.getAttributes();
-		lp.alpha = 0.9f;
-		window.setAttributes(lp);
-		dlg.show();
+		Intent it = new Intent();
+		it.setClass(this, AddLessonActivity.class);
+		startActivity(it);
 	}
 
 	public void onBtnSetting(View view)
