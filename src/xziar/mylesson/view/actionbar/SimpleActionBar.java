@@ -88,7 +88,6 @@ public class SimpleActionBar extends RelativeLayout
 			BarRight.addView(child, 0, params);
 			break;
 		}
-		//super.addView(child, index, params);
 	}
 
 }
