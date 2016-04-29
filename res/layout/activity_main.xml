@@ -10,8 +10,9 @@
     <xziar.mylesson.view.actionbar.SimpleActionBar
         android:id="@+id/actbar"
         android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:layout_margin="5dp">
+        android:layout_height="40dp"
+        android:padding="5dp"
+        actbar:separator="false">
 
         <xziar.mylesson.view.actionbar.ActionBarButton 
             android:layout_width="wrap_content"
@@ -36,7 +37,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" 
         android:background="@color/baseBGColor"
-        actbar:titleBG="@color/actBarColor"
         actbar:blkSize="56"
         />
 

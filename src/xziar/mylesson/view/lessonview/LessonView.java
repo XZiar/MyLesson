@@ -28,7 +28,6 @@ public class LessonView extends ViewGroup
 	private RowHeaders rowH = null;
 	private ColumnHeaders colH = null;
 	private TimeTableView ttv = null;
-	protected Drawable titleBG = null;
 	protected Paint paintLine = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private OnChooseItemListener OnChooseItem = null;
 
@@ -56,7 +55,6 @@ public class LessonView extends ViewGroup
 		super(context, attrs, defStyleAttr);
 		TypedArray ta = context.obtainStyledAttributes(attrs,
 				R.styleable.LessonView);
-		titleBG = ta.getDrawable(R.styleable.LessonView_titleBG);
 		blkSize = ta.getInt(R.styleable.LessonView_blkSize, 56);
 		ta.recycle();
 		init(context);
@@ -72,10 +70,6 @@ public class LessonView extends ViewGroup
 		paintLine.setColor(Color.GRAY);
 		paintLine.setStrokeWidth(2.0f);
 		paintLine.setStyle(Style.STROKE);
-
-		if (titleBG == null)
-			titleBG = new ColorDrawable(0xfff7f7f7);
-		colH.setBackground(titleBG);
 
 		if (getBackground() == null)
 			setBackground(new ColorDrawable(0xffdde2e7));
@@ -173,7 +167,7 @@ public class LessonView extends ViewGroup
 	@Override
 	protected void dispatchDraw(Canvas canvas)
 	{
-		// Log.v("tester", "LessonView dispatchDraw");
+		Log.v("tester", "LessonView dispatchDraw");
 
 		canvas.save();
 		canvas.clipRect(rectTTV);
@@ -193,10 +187,7 @@ public class LessonView extends ViewGroup
 		colH.draw(canvas);
 		canvas.restore();
 
-		// draw self
-		titleBG.setBounds(0, 0, rectRH.right, rectCH.bottom);
-		titleBG.draw(canvas);
-
+		//draw seperator
 		canvas.drawLine(0, loCH.bottom, canvas.getWidth(), loCH.bottom,
 				paintLine);
 	}
@@ -280,17 +271,9 @@ public class LessonView extends ViewGroup
 		this.OnChooseItem = chooseListener;
 	}
 
-	public void setTitleBG(Drawable tbg)
-	{
-		titleBG = tbg;
-		colH.setBackground(titleBG);
-		postInvalidate();
-	}
-
 	@Override
 	public void setBackground(Drawable bg)
 	{
-		super.setBackground(bg);
 		if (ttv != null)
 			ttv.setBackground(bg);
 		if (rowH != null)

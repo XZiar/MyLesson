@@ -7,6 +7,7 @@ public class LessonBean implements LessonBlock
 	public int LID = -1;
 	public String lessonName = "";
 	public String place = "";
+	public String teacher = "";
 	public int timeFrom, timeLast, timeWeek, weekFrom, weekTo;
 	public int color = 0xff444444;
 
