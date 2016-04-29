@@ -15,4 +15,7 @@
     <declare-styleable name="LessonView">
         <attr name="blkSize" format="integer" />
     </declare-styleable>
+    <declare-styleable name="InputBlock">
+        <attr name="icon" format="reference" />
+    </declare-styleable>
 </resources>

@@ -35,8 +35,74 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:padding="10dp"
         android:background="@color/baseBGColor" >
         
+        <xziar.mylesson.view.InputBlock
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:padding="8dp"
+            actbar:icon="@drawable/icon_lesson" >
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:hint="输入课程名"
+                android:singleLine="true" />
+        </xziar.mylesson.view.InputBlock>
+        
+        <xziar.mylesson.view.InputBlock 
+            android:layout_width="match_parent"
+        	android:layout_height="48dp"
+        	android:padding="8dp"
+        	actbar:icon="@drawable/icon_teacher">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:hint="输入授课教师姓名"
+                android:singleLine="true" />
+        </xziar.mylesson.view.InputBlock>
+        
+        <xziar.mylesson.view.InputBlock 
+            android:layout_width="match_parent"
+        	android:layout_height="48dp"
+        	android:padding="8dp"
+        	actbar:icon="@drawable/icon_week">
+        	<EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:hint="星期"
+                android:singleLine="true" />
+        </xziar.mylesson.view.InputBlock>
+        
+        <xziar.mylesson.view.InputBlock 
+            android:layout_width="match_parent"
+        	android:layout_height="48dp"
+        	android:padding="8dp"
+        	actbar:icon="@drawable/icon_time">
+        	<EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:hint="时间"
+                android:singleLine="true" />
+        </xziar.mylesson.view.InputBlock>
+        
+        <xziar.mylesson.view.InputBlock 
+            android:layout_width="match_parent"
+        	android:layout_height="48dp"
+        	android:padding="8dp"
+        	actbar:icon="@drawable/icon_addr">
+        	<EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:hint="输入上课地点"
+                android:singleLine="true" />
+        </xziar.mylesson.view.InputBlock>
+
     </LinearLayout>
     
 </LinearLayout>
