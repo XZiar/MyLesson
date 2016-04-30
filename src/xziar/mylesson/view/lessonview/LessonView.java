@@ -115,6 +115,7 @@ public class LessonView extends ViewGroup
 		curWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 		Log.v("tester", "new:"+curWeek.getTime());
 		colH.setCurweek(curWeek.getTime());
+		ttv.setCurWeek(week);
 		invalidate();
 	}
 	

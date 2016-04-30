@@ -36,6 +36,7 @@ public class TimeTableView extends View implements OnTouchListener
 	private boolean isNeedReBuf = true;
 	private LessonBlock[][] lessonMap = null;
 	private List<LessonBlock> lessons = new ArrayList<LessonBlock>();
+	private int curWeek = 1;
 
 	private OnChooseListener chooseListener = null;
 
@@ -135,7 +136,8 @@ public class TimeTableView extends View implements OnTouchListener
 		lessonMap = new LessonBlock[7][12];
 		for (LessonBlock lb : lessons)
 		{
-			drawBlock(bufCV, lb);
+			if(lb.testWeek(curWeek))
+				drawBlock(bufCV, lb);
 		}
 
 		isNeedReBuf = false;
@@ -182,6 +184,12 @@ public class TimeTableView extends View implements OnTouchListener
 	public void setLessons(List<LessonBlock> ls)
 	{
 		this.lessons = ls;
+		isNeedReBuf = true;
+	}
+	
+	public void setCurWeek(int curWeek)
+	{
+		this.curWeek = curWeek;
 		isNeedReBuf = true;
 	}
 
