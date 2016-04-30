@@ -1,0 +1,90 @@
+package xziar.mylesson.view.actionbar;
+
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.drawable.ColorDrawable;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.NumberPicker;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+import android.widget.NumberPicker.OnScrollListener;
+import xziar.mylesson.R;
+import xziar.mylesson.view.NumberPickerEx;
+
+public class ActionBarNumPicker extends TextView
+		implements ActionBarElement, OnClickListener, OnScrollListener
+{
+	private PopupWindow pop;
+	private NumberPickerEx np;
+	int alignType = 0;
+	private int minVal = 0, maxVal = 0;
+
+	public ActionBarNumPicker(Context context, AttributeSet attrs,
+			int defStyleAttr)
+	{
+		super(context, attrs, defStyleAttr);
+		TypedArray ta = context.obtainStyledAttributes(attrs,
+				R.styleable.ActionBarElement);
+		alignType = ta.getInt(R.styleable.ActionBarElement_align, 0);
+		ta.recycle();
+		ta = context.obtainStyledAttributes(attrs,
+				R.styleable.ActionBarNumPicker);
+		minVal = ta.getInt(R.styleable.ActionBarNumPicker_minVal, 0);
+		maxVal = ta.getInt(R.styleable.ActionBarNumPicker_maxVal, 0);
+		init(context);
+	}
+
+	public ActionBarNumPicker(Context context, AttributeSet attrs)
+	{
+		this(context, attrs, 0);
+	}
+
+	public ActionBarNumPicker(Context context)
+	{
+		super(context);
+		init(context);
+	}
+
+	private void init(Context context)
+	{
+		View cont = LayoutInflater.from(context)
+				.inflate(R.layout.popup_week_choose, null);
+		np = (NumberPickerEx) cont.findViewById(R.id.npWeek);
+		np.setMaxValue(maxVal);
+		np.setMinValue(minVal);
+		pop = new PopupWindow(cont, LayoutParams.WRAP_CONTENT,
+				LayoutParams.WRAP_CONTENT);
+		pop.setOutsideTouchable(true);
+		pop.setBackgroundDrawable(new ColorDrawable(0xe0c0c0c0));
+
+		np.setOnScrollListener(this);
+		setOnClickListener(this);
+	}
+
+	@Override
+	public AlignType getAlign()
+	{
+		return AlignType.values()[alignType];
+	}
+
+	@Override
+	public void onClick(View v)
+	{
+		pop.setWidth(getWidth());
+		pop.showAsDropDown(this);
+	}
+
+	@Override
+	public void onScrollStateChange(NumberPicker view, int scrollState)
+	{
+		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE)
+		{
+			int val = view.getValue();
+			this.setText("µÚ"+val+"ÖÜ");
+		}
+	}
+}

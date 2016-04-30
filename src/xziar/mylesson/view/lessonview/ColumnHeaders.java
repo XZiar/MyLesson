@@ -3,6 +3,10 @@
  */
 package xziar.mylesson.view.lessonview;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -27,8 +31,11 @@ public class ColumnHeaders extends View implements OnTouchListener
 	protected Bitmap bufBM = null;
 	protected Canvas bufCV = null;
 	
-	private boolean isReBuf = true;
+	private boolean isNeedReBuf = true;
 	private int viewWidth, viewHeight, width, height;// in px
+	private Date curweek = new Date();
+	private SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
+	
 
 	/**
 	 * constructor of ColumnHeaders
@@ -86,19 +93,23 @@ public class ColumnHeaders extends View implements OnTouchListener
 		float baselineTime = (height * 7 / 5 - fontMetrics.top
 				- fontMetrics.bottom) / 2f;
 		
+		Calendar curDay =Calendar.getInstance();
+		curDay.setTime(curweek);
 		for (Integer a = 0; a < days.length; a++)
 		{
 			float baseX = width * a + width / 2f;
 			bufCV.drawText(days[a], baseX, baselineDay, paintDay);
-			bufCV.drawText(a.toString(), baseX, baselineTime, paintTime);
+			String curDate = sdf.format(curDay.getTime());
+			curDay.add(Calendar.DATE, 1);
+			bufCV.drawText(curDate, baseX, baselineTime, paintTime);
 		}
-		isReBuf = false;
+		isNeedReBuf = false;
 	}
 	
 	@Override
 	protected void onDraw(Canvas canvas)
 	{
-		if(isReBuf)
+		if(isNeedReBuf)
 			bufferDraw();
 		canvas.drawBitmap(bufBM, 0, 0, null);
 	}
@@ -116,5 +127,11 @@ public class ColumnHeaders extends View implements OnTouchListener
 			break;
 		}
 		return false;
+	}
+	
+	public void setCurweek(Date curweek)
+	{
+		this.curweek = curweek;
+		isNeedReBuf = true;
 	}
 }

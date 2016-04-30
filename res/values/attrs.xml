@@ -13,6 +13,10 @@
     <declare-styleable name="ActionBarButton">
         <attr name="img" format="reference|color" />
     </declare-styleable>
+    <declare-styleable name="ActionBarNumPicker">
+        <attr name="minVal" format="integer" />
+        <attr name="maxVal" format="integer" />
+    </declare-styleable>
     <declare-styleable name="LessonView">
         <attr name="blkSize" format="integer" />
         <attr name="weekday" format="reference" />

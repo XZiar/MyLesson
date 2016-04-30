@@ -1,5 +1,7 @@
 package xziar.mylesson.activity;
 
+import java.util.Calendar;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +35,8 @@ public class MainActivity extends Activity
 	private PopupWindow pop = null;
 	private TextView popTxtLN, popTxtTN, popTxtWeek, popTxtTP;
 	private Button popBtnMod, popBtnDel;
+	private Calendar cal = Calendar.getInstance();
+	private int curWeek = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -61,8 +65,9 @@ public class MainActivity extends Activity
 			popBtnDel = (Button) cont.findViewById(R.id.btn_del);
 		}
 		DBUtil.onInit(getFilesDir());
-
+		cal.set(2016, Calendar.MARCH, 1);
 		lview.setData(DBUtil.query());
+		lview.setWeek(cal, curWeek);
 		lview.SetOnChooseItemListener(new OnChooseItemListener()
 		{
 			@Override
@@ -99,7 +104,8 @@ public class MainActivity extends Activity
 		popTxtTN.setText(lb.teacher);
 		popTxtWeek
 				.setText(lb.weekFrom + "-" + lb.weekTo + "周，每周" + lb.timeWeek);
-		popTxtTP.setText(lb.timeFrom + "-" + lb.timeLast + "," + lb.place);
+		popTxtTP.setText((lb.timeFrom + 1) + "-" + (lb.timeFrom + lb.timeLast)
+				+ "节课," + lb.place);
 		popBtnMod.setOnClickListener(new OnClickListener()
 		{
 			@Override

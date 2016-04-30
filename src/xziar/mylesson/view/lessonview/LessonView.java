@@ -1,6 +1,7 @@
 package xziar.mylesson.view.lessonview;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -39,6 +40,7 @@ public class LessonView extends ViewGroup
 	private boolean isTTV = false, isMoved = false;
 	private ArrayList<String> weekdays = new ArrayList<>();
 	private int blkSize = 56;
+	private Calendar curWeek;
 
 	public LessonView(Context context)
 	{
@@ -105,6 +107,14 @@ public class LessonView extends ViewGroup
 		postInvalidate();
 	}
 
+	public void setWeek(Calendar begin, int week)
+	{
+		begin.add(Calendar.DATE, (week - 1) * 7);
+		begin.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		curWeek = begin;
+		colH.setCurweek(curWeek.getTime());
+	}
+	
 	private boolean scrollElement(int dx, int dy)
 	{
 		lastX = moveX;
