@@ -27,6 +27,10 @@
             android:name=".activity.AddLessonActivity"
             android:label="@string/title_activity_add_lesson" >
         </activity>
+        <activity
+            android:name=".activity.ModLessonActivity"
+            android:label="@string/title_activity_mod_lesson" >
+        </activity>
     </application>
 
 </manifest>

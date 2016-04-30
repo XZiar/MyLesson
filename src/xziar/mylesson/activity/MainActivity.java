@@ -20,6 +20,7 @@ import xziar.mylesson.view.lessonview.LessonView.OnChooseItemListener;
 public class MainActivity extends Activity
 {
 	private final static int REQUESTCODE_Add = 1;
+	private final static int REQUESTCODE_Mod = 2;
 	private static Context context = null;
 	private LessonView lview = null;
 
@@ -42,8 +43,10 @@ public class MainActivity extends Activity
 			@Override
 			public void onChoose(LessonBlock lb)
 			{
-				DBUtil.delete((LessonBean) lb);
-				lview.setData(DBUtil.query());
+				Intent it = new Intent();
+				it.setClass(MainActivity.this, ModLessonActivity.class);
+				it.putExtra("LessonBean", (LessonBean) lb);
+				startActivityForResult(it, REQUESTCODE_Mod);
 			}
 		});
 	}
@@ -89,10 +92,17 @@ public class MainActivity extends Activity
 		super.onActivityResult(requestCode, resultCode, data);
 		if(resultCode == RESULT_OK)
 		{
+			LessonBean lb;
 			switch(requestCode)
 			{
 			case REQUESTCODE_Add:
-				LessonBean lb = (LessonBean) data.getSerializableExtra("LessonBean");
+				lb = (LessonBean) data.getSerializableExtra("LessonBean");
+				DBUtil.add(lb);
+				lview.setData(DBUtil.query());
+				break;
+			case REQUESTCODE_Mod:
+				lb = (LessonBean) data.getSerializableExtra("LessonBean");
+				DBUtil.delete(lb);
 				DBUtil.add(lb);
 				lview.setData(DBUtil.query());
 				break;

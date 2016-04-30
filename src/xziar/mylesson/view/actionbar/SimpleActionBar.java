@@ -12,15 +12,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import xziar.mylesson.R;
 import xziar.mylesson.util.SizeUtil;
 
 public class SimpleActionBar extends RelativeLayout
 {
 	private LinearLayout BarLeft, BarMid, BarRight;
+	private TextView txtTitle;
 	protected Paint paintLine = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private int pad = SizeUtil.dp2px(5);
 	private boolean isSeparator = true;
+	private String title = null;
 
 	public SimpleActionBar(Context context)
 	{
@@ -32,10 +35,11 @@ public class SimpleActionBar extends RelativeLayout
 			int defStyleAttr)
 	{
 		super(context, attrs, defStyleAttr);
-		TypedArray ta = context.obtainStyledAttributes(attrs,
-				new int[] { android.R.attr.padding, R.attr.separator });
+		TypedArray ta = context.obtainStyledAttributes(attrs, new int[] {
+				android.R.attr.padding, R.attr.separator, R.attr.title });
 		pad = ta.getDimensionPixelSize(0, 0);
 		isSeparator = ta.getBoolean(1, true);
+		title = ta.getString(2);
 		ta.recycle();
 		init(context);
 	}
@@ -65,6 +69,8 @@ public class SimpleActionBar extends RelativeLayout
 		parmM.addRule(RelativeLayout.CENTER_IN_PARENT);
 		super.addView(BarMid, -1, parmM);
 
+		setTitle(title);
+
 		paintLine.setColor(Color.GRAY);
 		paintLine.setStrokeWidth(2.0f);
 		paintLine.setStyle(Style.STROKE);
@@ -74,7 +80,6 @@ public class SimpleActionBar extends RelativeLayout
 	@Override
 	public void addView(View child, int index, ViewGroup.LayoutParams params)
 	{
-		Log.v("tester", "addView,params=" + params.getClass());
 		Class<?>[] viewifs = child.getClass().getInterfaces();
 		boolean isAdd = false;
 		for (Class<?> viewif : viewifs)
@@ -104,8 +109,6 @@ public class SimpleActionBar extends RelativeLayout
 		}
 	}
 
-	
-	
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
 	{
@@ -126,8 +129,29 @@ public class SimpleActionBar extends RelativeLayout
 		if (isSeparator)
 		{
 			int y = getBottom() - 1;
-			Log.v("tester", "actBar draw,btm="+getBottom()+"y="+y);
+			Log.v("tester", "actBar draw,btm=" + getBottom() + "y=" + y);
 			canvas.drawLine(0, y, canvas.getWidth(), y, paintLine);
+		}
+	}
+
+	public void setTitle(String title)
+	{
+		this.title = title;
+		if (title != null)
+		{
+			if (txtTitle == null)
+			{
+				txtTitle = new TextView(getContext());
+				BarMid.addView(txtTitle, 0, new ViewGroup.LayoutParams(
+						LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			}
+			txtTitle.setText(title);
+			postInvalidate();
+		}
+		else if (txtTitle != null)
+		{
+			BarMid.removeView(txtTitle);
+			postInvalidate();
 		}
 	}
 

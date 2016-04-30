@@ -1,6 +1,7 @@
 <resources>
     <declare-styleable name="ActionBar">
         <attr name="separator" format="boolean"/>
+        <attr name="title" format="string" />
     </declare-styleable>
     <declare-styleable name="ActionBarElement">
         <attr name="align">

@@ -4,5 +4,6 @@
     <string name="app_name">MyLesson</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_add_lesson">AddLessonActivity</string>
+	<string name="title_activity_mod_lesson">ModLessonActivity</string>
 
 </resources>
