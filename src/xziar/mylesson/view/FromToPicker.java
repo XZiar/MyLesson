@@ -85,6 +85,26 @@ public class FromToPicker extends LinearLayout
 	{
 		return npTo.getValue();
 	}
+	
+	public int setFromVal(int val)
+	{
+		if(val < minVal)
+			val = minVal;
+		else if(val > maxVal)
+			val = maxVal;
+		npFrom.setValue(val);
+		return val;
+	}
+
+	public int setToVal(int val)
+	{
+		if(val < minVal)
+			val = minVal;
+		else if(val > maxVal)
+			val = maxVal;
+		npTo.setValue(val);
+		return val;
+	}
 
 	@Override
 	public void onValueChange(NumberPicker picker, int oldVal, int newVal)

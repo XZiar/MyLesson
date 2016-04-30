@@ -43,8 +43,8 @@ public class DBUtil
 		catch(SQLException e)
 		{
 			Log.e("sql", e.getLocalizedMessage());
-			delete();
-			db.execSQL(initSQL);
+			//delete();
+			//db.execSQL(initSQL);
 		}
 	}
 

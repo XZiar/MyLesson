@@ -1,18 +1,24 @@
 package xziar.mylesson.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
-import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import xziar.mylesson.R;
 import xziar.mylesson.data.DBUtil;
 import xziar.mylesson.data.LessonBean;
+import xziar.mylesson.util.SizeUtil;
 import xziar.mylesson.view.lessonview.LessonBlock;
 import xziar.mylesson.view.lessonview.LessonView;
 import xziar.mylesson.view.lessonview.LessonView.OnChooseItemListener;
@@ -20,30 +26,49 @@ import xziar.mylesson.view.lessonview.LessonView.OnChooseItemListener;
 public class MainActivity extends Activity
 {
 	private final static int REQUESTCODE_Add = 1;
+	private final static int REQUESTCODE_Mod = 2;
+	public final static int RETCODE_Del = 2;
 	private static Context context = null;
 	private LessonView lview = null;
+	private PopupWindow pop = null;
+	private TextView popTxtLN, popTxtTN, popTxtWeek, popTxtTP;
+	private Button popBtnMod, popBtnDel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		Log.v("tester", "Context create");
 		context = getApplicationContext();
 
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 		lview = (LessonView) findViewById(R.id.lv);
-
+		{
+			View cont = LayoutInflater.from(context)
+					.inflate(R.layout.popup_lesson_detail, null);
+			Rect rect = new Rect();
+			getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
+			int w = rect.right - rect.left - 2 * SizeUtil.dp2px(32);
+			pop = new PopupWindow(cont, w, LayoutParams.WRAP_CONTENT);
+			pop.setOutsideTouchable(true);
+			pop.setBackgroundDrawable(
+					getResources().getDrawable(R.drawable.popupwindow));
+			popTxtLN = (TextView) cont.findViewById(R.id.lname);
+			popTxtTN = (TextView) cont.findViewById(R.id.tname);
+			popTxtWeek = (TextView) cont.findViewById(R.id.week);
+			popTxtTP = (TextView) cont.findViewById(R.id.timeplace);
+			popBtnMod = (Button) cont.findViewById(R.id.btn_mod);
+			popBtnDel = (Button) cont.findViewById(R.id.btn_del);
+		}
 		DBUtil.onInit(getFilesDir());
-		
+
 		lview.setData(DBUtil.query());
 		lview.SetOnChooseItemListener(new OnChooseItemListener()
 		{
 			@Override
 			public void onChoose(LessonBlock lb)
 			{
-				DBUtil.delete((LessonBean) lb);
-				lview.setData(DBUtil.query());
+				LessonDetail((LessonBean) lb);
 			}
 		});
 	}
@@ -64,22 +89,50 @@ public class MainActivity extends Activity
 
 	public void onBtnSetting(View view)
 	{
-		AlertDialog.Builder builder = new AlertDialog.Builder(
-				MainActivity.this);
-		builder.setMessage("System Setting").setPositiveButton("确定",
-				new DialogInterface.OnClickListener()
-				{
-					public void onClick(DialogInterface arg0, int arg1)
-					{
-					}
-				});
-		// 透明
-		final AlertDialog dlg = builder.create();
-		Window window = dlg.getWindow();
-		WindowManager.LayoutParams lp = window.getAttributes();
-		lp.alpha = 0.9f;
-		window.setAttributes(lp);
-		dlg.show();
+
+	}
+
+	private void LessonDetail(final LessonBean lb)
+	{
+		popTxtLN.setText(lb.lessonName);
+		popTxtLN.setTextColor(lb.color);
+		popTxtTN.setText(lb.teacher);
+		popTxtWeek
+				.setText(lb.weekFrom + "-" + lb.weekTo + "周，每周" + lb.timeWeek);
+		popTxtTP.setText(lb.timeFrom + "-" + lb.timeLast + "," + lb.place);
+		popBtnMod.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				modLesson(lb);
+				pop.dismiss();
+			}
+		});
+		popBtnDel.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				delLesson(lb);
+				pop.dismiss();
+			}
+		});
+		pop.showAtLocation((View) lview.getParent(), Gravity.CENTER, 0, 0);
+	}
+
+	private void modLesson(LessonBean lb)
+	{
+		Intent it = new Intent();
+		it.setClass(MainActivity.this, ModLessonActivity.class);
+		it.putExtra("LessonBean", (LessonBean) lb);
+		startActivityForResult(it, REQUESTCODE_Mod);
+	}
+
+	private void delLesson(LessonBean lb)
+	{
+		DBUtil.delete(lb);
+		lview.setData(DBUtil.query());
 	}
 
 	@Override
@@ -87,16 +140,26 @@ public class MainActivity extends Activity
 			Intent data)
 	{
 		super.onActivityResult(requestCode, resultCode, data);
-		if(resultCode == RESULT_OK)
+		if (resultCode == RESULT_OK)
 		{
-			switch(requestCode)
+			LessonBean lb;
+			switch (requestCode)
 			{
 			case REQUESTCODE_Add:
-				LessonBean lb = (LessonBean) data.getSerializableExtra("LessonBean");
+				lb = (LessonBean) data.getSerializableExtra("LessonBean");
 				DBUtil.add(lb);
-				lview.setData(DBUtil.query());
+				break;
+			case REQUESTCODE_Mod:
+				lb = (LessonBean) data.getSerializableExtra("LessonBean");
+				DBUtil.delete(lb);
+				DBUtil.add(lb);
 				break;
 			}
+			lview.setData(DBUtil.query());
+		}
+		else if (resultCode == RETCODE_Del)
+		{
+			delLesson((LessonBean) data.getSerializableExtra("LessonBean"));
 		}
 	}
 

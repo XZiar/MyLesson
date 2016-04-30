@@ -8,15 +8,17 @@ import android.view.Window;
 import android.widget.EditText;
 import xziar.mylesson.R;
 import xziar.mylesson.data.LessonBean;
-import xziar.mylesson.util.RandomUtil;
 import xziar.mylesson.view.FromToPicker;
 import xziar.mylesson.view.NumberPickerEx;
+import xziar.mylesson.view.actionbar.SimpleActionBar;
 
-public class AddLessonActivity extends Activity
+public class ModLessonActivity extends Activity
 {
+	private SimpleActionBar actBar;
 	private EditText txtLN, txtTN, txtAddr;
 	private FromToPicker npWeek, npTime;
 	private NumberPickerEx npWeekTime;
+	private LessonBean lb;
 	private String[] days;
 
 	@Override
@@ -25,6 +27,7 @@ public class AddLessonActivity extends Activity
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_add_lesson);
+		actBar = (SimpleActionBar) findViewById(R.id.actbar);
 		txtLN = (EditText) findViewById(R.id.lname);
 		txtTN = (EditText) findViewById(R.id.tname);
 		txtAddr = (EditText) findViewById(R.id.laddr);
@@ -32,22 +35,32 @@ public class AddLessonActivity extends Activity
 		npWeekTime = (NumberPickerEx) findViewById(R.id.npWeekTime);
 		npTime = (FromToPicker) findViewById(R.id.npTime);
 		
+		actBar.setTitle("ÐÞ¸Ä¿Î³Ì");
 		days = getResources().getStringArray(R.array.weekdays);
 		npWeekTime.setDisplayedValues(days);
+		
+		lb = (LessonBean) getIntent().getSerializableExtra("LessonBean");
+		txtLN.setText(lb.lessonName);
+		txtTN.setText(lb.teacher);
+		txtAddr.setText(lb.place);
+		npWeek.setFromVal(lb.weekFrom);
+		npWeek.setToVal(lb.weekTo);
+		npTime.setFromVal(lb.timeFrom);
+		npTime.setToVal(lb.timeLast + lb.timeFrom - 1);
+		npWeekTime.setValue(lb.timeWeek - 1);
 	}
 
 	public void onBtnYes(View view)
 	{
-		LessonBean lb = new LessonBean();
 		lb.lessonName = txtLN.getText().toString();
 		lb.teacher = txtTN.getText().toString();
 		lb.place = txtAddr.getText().toString();
 		lb.weekFrom = npWeek.getFromVal();
 		lb.weekTo = npWeek.getToVal();
 		lb.timeFrom = npTime.getFromVal();
-		lb.timeLast = npTime.getToVal() - lb.timeFrom + 1;
+		lb.timeLast = npTime.getToVal() - lb.timeFrom;
 		lb.timeWeek = npWeekTime.getValue() + 1;
-		lb.color = RandomUtil.getColor();
+		lb.color = 0xff40b060;
 		Intent intent = new Intent();
 		intent.putExtra("LessonBean", lb);
 		setResult(RESULT_OK, intent);
