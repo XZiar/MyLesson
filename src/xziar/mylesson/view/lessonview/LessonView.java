@@ -214,7 +214,10 @@ public class LessonView extends ViewGroup
 			{
 				objTouch = colH;
 			}
-			objTouch.dispatchTouchEvent(e);
+			else
+				objTouch = null;
+			if(objTouch != null)
+				objTouch.dispatchTouchEvent(e);
 			Log.v("tester", "Touch_Down at " + locTX + "," + locTY);
 			break;
 		case MotionEvent.ACTION_MOVE:
@@ -224,7 +227,8 @@ public class LessonView extends ViewGroup
 		case MotionEvent.ACTION_UP:
 			if (!isMoved)
 			{
-				objTouch.dispatchTouchEvent(e);
+				if(objTouch != null)
+					objTouch.dispatchTouchEvent(e);
 			}
 			else if (isTTV)
 				onTouchEvent(e);
