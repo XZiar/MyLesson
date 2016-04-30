@@ -32,7 +32,7 @@ public class LessonBean implements LessonBlock
 	@Override
 	public int getTime()
 	{
-		return timeFrom;
+		return timeFrom - 1;
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class LessonBean implements LessonBlock
 	@Override
 	public int getWeekDay()
 	{
-		return timeWeek;
+		return timeWeek - 1;
 	}
 
 	@Override

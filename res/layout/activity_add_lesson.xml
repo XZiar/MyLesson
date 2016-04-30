@@ -68,27 +68,39 @@
         
         <xziar.mylesson.view.InputBlock 
             android:layout_width="match_parent"
-        	android:layout_height="48dp"
+        	android:layout_height="80dp"
         	android:padding="8dp"
         	actbar:ico="@drawable/icon_week">
-        	<EditText
-                android:layout_width="match_parent"
+        	<xziar.mylesson.view.FromToPicker
+                android:id="@+id/npWeek"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@null"
-                android:hint="星期"
-                android:singleLine="true" />
+                actbar:minValue="1"
+                actbar:maxValue="12"
+                actbar:txtStart="从第"
+                actbar:txtMid="周到第"
+                actbar:txtEnd="周" />
+        	<xziar.mylesson.view.NumberPickerEx 
+        	    android:id="@+id/npWeekTime"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
         </xziar.mylesson.view.InputBlock>
         
         <xziar.mylesson.view.InputBlock
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             actbar:ico="@drawable/icon_time"
             android:padding="8dp" >
 
             <xziar.mylesson.view.FromToPicker
                 android:id="@+id/npTime"
                 android:layout_width="wrap_content"
-                android:layout_height="80dp" />
+                android:layout_height="match_parent"
+                actbar:minValue="1"
+                actbar:maxValue="12"
+                actbar:txtStart="从第"
+                actbar:txtMid="节到第"
+                actbar:txtEnd="节" />
 
         </xziar.mylesson.view.InputBlock>
         

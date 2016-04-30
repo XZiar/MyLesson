@@ -35,9 +35,9 @@ public class MainActivity extends Activity
 		lview = (LessonView) findViewById(R.id.lv);
 
 		DBUtil.onInit(getFilesDir());
-		for (int a = 0; a < 7; a++)
+		for (int a = 1; a <= 7; a++)
 		{
-			for (int b = 0; b < 12; b += 4)
+			for (int b = 1; b <= 12; b += 4)
 			{
 				LessonBean lb = new LessonBean();
 				lb.timeWeek = a;
