@@ -19,7 +19,7 @@ public class ModLessonActivity extends Activity
 	private FromToPicker npWeek, npTime;
 	private NumberPickerEx npWeekTime;
 	private LessonBean lb;
-	private String[] days = { "周一", "周二", "周三", "周四", "周五", "周六", "周日" };
+	private String[] days;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -36,6 +36,7 @@ public class ModLessonActivity extends Activity
 		npTime = (FromToPicker) findViewById(R.id.npTime);
 		
 		actBar.setTitle("修改课程");
+		days = getResources().getStringArray(R.array.weekdays);
 		npWeekTime.setDisplayedValues(days);
 		
 		lb = (LessonBean) getIntent().getSerializableExtra("LessonBean");
@@ -45,7 +46,7 @@ public class ModLessonActivity extends Activity
 		npWeek.setFromVal(lb.weekFrom);
 		npWeek.setToVal(lb.weekTo);
 		npTime.setFromVal(lb.timeFrom);
-		npTime.setToVal(lb.timeLast + lb.timeFrom);
+		npTime.setToVal(lb.timeLast + lb.timeFrom - 1);
 		npWeekTime.setValue(lb.timeWeek - 1);
 	}
 

@@ -28,6 +28,7 @@ public class LessonView extends ViewGroup
 	private RowHeaders rowH = null;
 	private ColumnHeaders colH = null;
 	private TimeTableView ttv = null;
+	private View objTouch = null;
 	protected Paint paintLine = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private OnChooseItemListener OnChooseItem = null;
 
@@ -36,7 +37,7 @@ public class LessonView extends ViewGroup
 	private int offsetX = 0, offsetY = 0, moveX = -1, moveY = -1, lastX, lastY;
 	private int locTX, locTY, maxDX, maxDY, dDis;
 	private boolean isTTV = false, isMoved = false;
-	private View objTouch;
+	private ArrayList<String> weekdays = new ArrayList<>();
 	private int blkSize = 56;
 
 	public LessonView(Context context)
@@ -56,6 +57,10 @@ public class LessonView extends ViewGroup
 		TypedArray ta = context.obtainStyledAttributes(attrs,
 				R.styleable.LessonView);
 		blkSize = ta.getInt(R.styleable.LessonView_blkSize, 56);
+		CharSequence[] txts = ta.getTextArray(R.styleable.LessonView_weekday);
+		if (txts != null)
+			for (CharSequence ch : txts)
+				weekdays.add((String) ch);
 		ta.recycle();
 		init(context);
 	}
@@ -64,7 +69,8 @@ public class LessonView extends ViewGroup
 	{
 		dDis = SizeUtil.dp2px(blkSize) / 10;
 		rowH = new RowHeaders(context, 38, blkSize);
-		colH = new ColumnHeaders(context, blkSize, 44);
+		colH = new ColumnHeaders(context, blkSize, 44,
+				weekdays.toArray(new String[weekdays.size()]));
 		ttv = new TimeTableView(context, blkSize);
 
 		paintLine.setColor(Color.GRAY);
@@ -187,7 +193,7 @@ public class LessonView extends ViewGroup
 		colH.draw(canvas);
 		canvas.restore();
 
-		//draw seperator
+		// draw seperator
 		canvas.drawLine(0, loCH.bottom, canvas.getWidth(), loCH.bottom,
 				paintLine);
 	}
@@ -216,7 +222,7 @@ public class LessonView extends ViewGroup
 			}
 			else
 				objTouch = null;
-			if(objTouch != null)
+			if (objTouch != null)
 				objTouch.dispatchTouchEvent(e);
 			Log.v("tester", "Touch_Down at " + locTX + "," + locTY);
 			break;
@@ -227,7 +233,7 @@ public class LessonView extends ViewGroup
 		case MotionEvent.ACTION_UP:
 			if (!isMoved)
 			{
-				if(objTouch != null)
+				if (objTouch != null)
 					objTouch.dispatchTouchEvent(e);
 			}
 			else if (isTTV)

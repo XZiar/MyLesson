@@ -15,6 +15,7 @@
     </declare-styleable>
     <declare-styleable name="LessonView">
         <attr name="blkSize" format="integer" />
+        <attr name="weekday" format="reference" />
     </declare-styleable>
     <declare-styleable name="InputBlock">
         <attr name="ico" format="reference" />

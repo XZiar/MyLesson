@@ -8,6 +8,7 @@ import android.view.Window;
 import android.widget.EditText;
 import xziar.mylesson.R;
 import xziar.mylesson.data.LessonBean;
+import xziar.mylesson.util.RandomUtil;
 import xziar.mylesson.view.FromToPicker;
 import xziar.mylesson.view.NumberPickerEx;
 
@@ -16,7 +17,7 @@ public class AddLessonActivity extends Activity
 	private EditText txtLN, txtTN, txtAddr;
 	private FromToPicker npWeek, npTime;
 	private NumberPickerEx npWeekTime;
-	private String[] days = { "周一", "周二", "周三", "周四", "周五", "周六", "周日" };
+	private String[] days;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -31,6 +32,7 @@ public class AddLessonActivity extends Activity
 		npWeekTime = (NumberPickerEx) findViewById(R.id.npWeekTime);
 		npTime = (FromToPicker) findViewById(R.id.npTime);
 		
+		days = getResources().getStringArray(R.array.weekdays);
 		npWeekTime.setDisplayedValues(days);
 	}
 
@@ -43,9 +45,9 @@ public class AddLessonActivity extends Activity
 		lb.weekFrom = npWeek.getFromVal();
 		lb.weekTo = npWeek.getToVal();
 		lb.timeFrom = npTime.getFromVal();
-		lb.timeLast = npTime.getToVal() - lb.timeFrom;
+		lb.timeLast = npTime.getToVal() - lb.timeFrom + 1;
 		lb.timeWeek = npWeekTime.getValue() + 1;
-		lb.color = 0xff40b060;
+		lb.color = RandomUtil.getColor();
 		Intent intent = new Intent();
 		intent.putExtra("LessonBean", lb);
 		setResult(RESULT_OK, intent);

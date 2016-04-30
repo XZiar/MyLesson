@@ -20,8 +20,7 @@ import xziar.mylesson.util.SizeUtil;
 @SuppressLint("ClickableViewAccessibility")
 public class ColumnHeaders extends View implements OnTouchListener
 {
-	private final static String[] days = { "周一", "周二", "周三", "周四", "周五", "周六",
-			"周日" };
+	private final String[] days;
 
 	protected Paint paintDay = new Paint(Paint.ANTI_ALIAS_FLAG);
 	protected Paint paintTime = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -41,9 +40,10 @@ public class ColumnHeaders extends View implements OnTouchListener
 	 * @param height
 	 *            height
 	 */
-	public ColumnHeaders(Context context, int columnWidth, int height)
+	public ColumnHeaders(Context context, int columnWidth, int height, String[] weekdays)
 	{
 		super(context);
+		days = weekdays;
 		setLayerType(View.LAYER_TYPE_HARDWARE, null);
 		setOnTouchListener(this);
 		

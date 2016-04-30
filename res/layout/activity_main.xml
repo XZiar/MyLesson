@@ -36,9 +36,9 @@
     <xziar.mylesson.view.lessonview.LessonView
         android:id="@+id/lv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" 
-        android:background="@color/baseBGColor"
+        android:layout_height="match_parent"
         actbar:blkSize="56"
-        />
+        actbar:weekday="@array/weekdays"
+        android:background="@color/baseBGColor" />
 
 </LinearLayout>
