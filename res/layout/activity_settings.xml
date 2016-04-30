@@ -1,12 +1,45 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:actbar="http://schemas.android.com/apk/res/xziar.mylesson"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/actBarColor"
     tools:context="${relativePackage}.${activityClass}" >
+    
+    <xziar.mylesson.view.actionbar.SimpleActionBar
+        android:id="@+id/actbar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:padding="5dp"
+        actbar:separator="false"
+        actbar:title="设置">
+        
+        <xziar.mylesson.view.actionbar.ActionBarButton 
+            android:layout_width="wrap_content"
+        	android:layout_height="match_parent"
+        	actbar:align="left"
+        	actbar:img="@drawable/icon_close"
+        	android:onClick="onBtnClose"
+            />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        <xziar.mylesson.view.actionbar.ActionBarButton 
+            android:layout_width="wrap_content"
+        	android:layout_height="match_parent"
+        	actbar:align="right"
+        	actbar:img="@drawable/icon_yes"
+        	android:onClick="onBtnYes"
+            />
+    	
+    </xziar.mylesson.view.actionbar.SimpleActionBar>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@color/baseBGColor" >
+        
+    </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

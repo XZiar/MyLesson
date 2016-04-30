@@ -41,6 +41,7 @@ public class MainActivity extends Activity
 	private Button popBtnMod, popBtnDel;
 	private Calendar cal = Calendar.getInstance();
 	private int curWeek = 1;
+	private String[] weekdays;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -52,6 +53,7 @@ public class MainActivity extends Activity
 		setContentView(R.layout.activity_main);
 		lview = (LessonView) findViewById(R.id.lv);
 		abNP = (ActionBarNumPicker) findViewById(R.id.npWeek);
+		weekdays = getResources().getStringArray(R.array.weekdays);
 		{
 			View cont = LayoutInflater.from(context)
 					.inflate(R.layout.popup_lesson_detail, null);
@@ -86,7 +88,7 @@ public class MainActivity extends Activity
 			@Override
 			public void onValueChange(int val)
 			{
-				Log.v("tester", "valChg:"+cal.getTime()+",week:"+val);
+				Log.v("tester", "valChg:" + cal.getTime() + ",week:" + val);
 				lview.setWeek(cal, val);
 			}
 		});
@@ -118,8 +120,8 @@ public class MainActivity extends Activity
 		popTxtLN.setText(lb.lessonName);
 		popTxtLN.setTextColor(lb.color);
 		popTxtTN.setText(lb.teacher);
-		popTxtWeek
-				.setText(lb.weekFrom + "-" + lb.weekTo + "周，每周" + lb.timeWeek);
+		popTxtWeek.setText(lb.weekFrom + "-" + lb.weekTo + "周，每"
+				+ weekdays[lb.timeWeek - 1]);
 		popTxtTP.setText((lb.timeFrom + 1) + "-" + (lb.timeFrom + lb.timeLast)
 				+ "节课," + lb.place);
 		popBtnMod.setOnClickListener(new OnClickListener()
@@ -170,16 +172,17 @@ public class MainActivity extends Activity
 			case REQUESTCODE_Add:
 				lb = (LessonBean) data.getSerializableExtra("LessonBean");
 				DBUtil.add(lb);
+				lview.setData(DBUtil.query());
 				break;
 			case REQUESTCODE_Mod:
 				lb = (LessonBean) data.getSerializableExtra("LessonBean");
 				DBUtil.delete(lb);
 				DBUtil.add(lb);
+				lview.setData(DBUtil.query());
 				break;
 			case REQUESTCODE_SETTINGS:
 				break;
 			}
-			lview.setData(DBUtil.query());
 		}
 		else if (resultCode == RETCODE_Del)
 		{
