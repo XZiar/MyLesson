@@ -15,6 +15,7 @@
         actbar:separator="false">
 
         <xziar.mylesson.view.actionbar.ActionBarNumPicker
+            android:id="@+id/npWeek"
             android:layout_width="wrap_content"
         	android:layout_height="match_parent"
         	android:text="第1周"

@@ -9,9 +9,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.NumberPicker;
+import android.widget.NumberPicker.OnScrollListener;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.NumberPicker.OnScrollListener;
 import xziar.mylesson.R;
 import xziar.mylesson.view.NumberPickerEx;
 
@@ -20,6 +20,8 @@ public class ActionBarNumPicker extends TextView
 {
 	private PopupWindow pop;
 	private NumberPickerEx np;
+	private OnValueChangeListener onValChange = null;
+
 	int alignType = 0;
 	private int minVal = 0, maxVal = 0;
 
@@ -78,6 +80,16 @@ public class ActionBarNumPicker extends TextView
 		pop.showAsDropDown(this);
 	}
 
+	public interface OnValueChangeListener
+	{
+		public void onValueChange(int val);
+	}
+	
+	public void setOnValChange(OnValueChangeListener onValChange)
+	{
+		this.onValChange = onValChange;
+	}
+	
 	@Override
 	public void onScrollStateChange(NumberPicker view, int scrollState)
 	{
@@ -85,6 +97,9 @@ public class ActionBarNumPicker extends TextView
 		{
 			int val = view.getValue();
 			this.setText("µÚ"+val+"ÖÜ");
+			invalidate();
+			if(onValChange != null)
+				onValChange.onValueChange(val);
 		}
 	}
 }

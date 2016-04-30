@@ -109,10 +109,13 @@ public class LessonView extends ViewGroup
 
 	public void setWeek(Calendar begin, int week)
 	{
-		begin.add(Calendar.DATE, (week - 1) * 7);
-		begin.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-		curWeek = begin;
+		curWeek = (Calendar) begin.clone();
+		Log.v("tester", "clone:"+curWeek.getTime());
+		curWeek.add(Calendar.DATE, (week - 1) * 7);
+		curWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		Log.v("tester", "new:"+curWeek.getTime());
 		colH.setCurweek(curWeek.getTime());
+		invalidate();
 	}
 	
 	private boolean scrollElement(int dx, int dy)
@@ -183,7 +186,7 @@ public class LessonView extends ViewGroup
 	@Override
 	protected void dispatchDraw(Canvas canvas)
 	{
-		Log.v("tester", "LessonView dispatchDraw");
+		//Log.v("tester", "LessonView dispatchDraw");
 
 		canvas.save();
 		canvas.clipRect(rectTTV);
@@ -267,8 +270,6 @@ public class LessonView extends ViewGroup
 				break;
 			else if (Math.abs(dx) + Math.abs(dy) > dDis)
 				isMoved = true;
-			// Log.v("tester", "Touch_Move " + dx + "," + dy);
-
 			if (scrollElement(dx, dy))
 				invalidate();
 			break;

@@ -21,6 +21,8 @@ import xziar.mylesson.R;
 import xziar.mylesson.data.DBUtil;
 import xziar.mylesson.data.LessonBean;
 import xziar.mylesson.util.SizeUtil;
+import xziar.mylesson.view.actionbar.ActionBarNumPicker;
+import xziar.mylesson.view.actionbar.ActionBarNumPicker.OnValueChangeListener;
 import xziar.mylesson.view.lessonview.LessonBlock;
 import xziar.mylesson.view.lessonview.LessonView;
 import xziar.mylesson.view.lessonview.LessonView.OnChooseItemListener;
@@ -32,6 +34,7 @@ public class MainActivity extends Activity
 	public final static int RETCODE_Del = 2;
 	private static Context context = null;
 	private LessonView lview = null;
+	private ActionBarNumPicker abNP = null;
 	private PopupWindow pop = null;
 	private TextView popTxtLN, popTxtTN, popTxtWeek, popTxtTP;
 	private Button popBtnMod, popBtnDel;
@@ -47,6 +50,7 @@ public class MainActivity extends Activity
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 		lview = (LessonView) findViewById(R.id.lv);
+		abNP = (ActionBarNumPicker) findViewById(R.id.npWeek);
 		{
 			View cont = LayoutInflater.from(context)
 					.inflate(R.layout.popup_lesson_detail, null);
@@ -74,6 +78,15 @@ public class MainActivity extends Activity
 			public void onChoose(LessonBlock lb)
 			{
 				LessonDetail((LessonBean) lb);
+			}
+		});
+		abNP.setOnValChange(new OnValueChangeListener()
+		{
+			@Override
+			public void onValueChange(int val)
+			{
+				Log.v("tester", "valChg:"+cal.getTime()+",week:"+val);
+				lview.setWeek(cal, val);
 			}
 		});
 	}
