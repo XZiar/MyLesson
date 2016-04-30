@@ -42,8 +42,9 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:padding="8dp"
-            actbar:icon="@drawable/icon_lesson" >
+            actbar:ico="@drawable/icon_lesson" >
             <EditText
+                android:id="@+id/lname"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"
@@ -55,8 +56,9 @@
             android:layout_width="match_parent"
         	android:layout_height="48dp"
         	android:padding="8dp"
-        	actbar:icon="@drawable/icon_teacher">
+        	actbar:ico="@drawable/icon_teacher">
             <EditText
+                android:id="@+id/tname"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"
@@ -68,7 +70,7 @@
             android:layout_width="match_parent"
         	android:layout_height="48dp"
         	android:padding="8dp"
-        	actbar:icon="@drawable/icon_week">
+        	actbar:ico="@drawable/icon_week">
         	<EditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -77,25 +79,26 @@
                 android:singleLine="true" />
         </xziar.mylesson.view.InputBlock>
         
-        <xziar.mylesson.view.InputBlock 
+        <xziar.mylesson.view.InputBlock
             android:layout_width="match_parent"
-        	android:layout_height="48dp"
-        	android:padding="8dp"
-        	actbar:icon="@drawable/icon_time">
-        	<EditText
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:hint="时间"
-                android:singleLine="true" />
+            android:layout_height="wrap_content"
+            actbar:ico="@drawable/icon_time"
+            android:padding="8dp" >
+
+            <xziar.mylesson.view.FromToPicker
+                android:id="@+id/npTime"
+                android:layout_width="wrap_content"
+                android:layout_height="80dp" />
+
         </xziar.mylesson.view.InputBlock>
         
         <xziar.mylesson.view.InputBlock 
             android:layout_width="match_parent"
         	android:layout_height="48dp"
         	android:padding="8dp"
-        	actbar:icon="@drawable/icon_addr">
+        	actbar:ico="@drawable/icon_addr">
         	<EditText
+        	    android:id="@+id/laddr"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"

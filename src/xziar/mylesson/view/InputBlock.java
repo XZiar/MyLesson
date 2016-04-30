@@ -4,10 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import xziar.mylesson.R;
@@ -17,18 +14,16 @@ public class InputBlock extends LinearLayout
 {
 	Drawable icon;
 	ImageView ico;
-	private int pad = 0, setH = 0;
+	private int pad = 0;
 	public static int minH = SizeUtil.dp2px(40);
 
 	public InputBlock(Context context, AttributeSet attrs, int defStyleAttr)
 	{
 		super(context, attrs, defStyleAttr);
-		TypedArray ta = context.obtainStyledAttributes(attrs, new int[] {
-				android.R.attr.padding, android.R.attr.layout_height, R.attr.icon });
+		TypedArray ta = context.obtainStyledAttributes(attrs,
+				new int[] { android.R.attr.padding, R.attr.ico });
 		pad = ta.getDimensionPixelSize(0, 0);
-		setH = ta.getDimensionPixelSize(1, 0);
-		Log.v("tester", "IB setH="+setH);
-		icon = ta.getDrawable(2);
+		icon = ta.getDrawable(1);
 		ta.recycle();
 		init(context);
 	}
@@ -46,26 +41,17 @@ public class InputBlock extends LinearLayout
 
 	private void init(Context context)
 	{
+		ico = new ImageView(context, null);
 		setGravity(Gravity.CENTER_VERTICAL);
-		setBackground(context.getResources().getDrawable(R.drawable.inputblock));
+		setBackground(
+				context.getResources().getDrawable(R.drawable.inputblock));
 		if (pad < 2)
 		{
 			pad = 2;
 			setPadding(pad, pad, pad, pad);
 		}
-		if (setH < minH)
-		{
-			setH = minH;
-			ViewGroup.LayoutParams parm = getLayoutParams();
-			if (parm == null)
-				parm = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
-						LayoutParams.MATCH_PARENT);
-			parm.height = setH;
-			setLayoutParams(parm);
-		}
 		if (icon != null)
 		{
-			ico = new ImageView(context, null);
 			ico.setImageDrawable(icon);
 			ico.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 			int size = SizeUtil.dp2px(18);
@@ -77,10 +63,14 @@ public class InputBlock extends LinearLayout
 	}
 
 	@Override
-	public void addView(View child, int index, ViewGroup.LayoutParams params)
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
 	{
-		Log.v("tester", "AddIB child:" + child.getClass().getName());
-		super.addView(child, index, params);
+		int setH = MeasureSpec.getSize(heightMeasureSpec);
+		if (setH < minH)
+			super.onMeasure(widthMeasureSpec,
+					MeasureSpec.makeMeasureSpec(minH, MeasureSpec.EXACTLY));
+		else
+			super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	}
 
 }

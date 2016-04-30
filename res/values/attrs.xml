@@ -16,6 +16,6 @@
         <attr name="blkSize" format="integer" />
     </declare-styleable>
     <declare-styleable name="InputBlock">
-        <attr name="icon" format="reference" />
+        <attr name="ico" format="reference" />
     </declare-styleable>
 </resources>
