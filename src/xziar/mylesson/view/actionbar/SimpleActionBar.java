@@ -141,7 +141,7 @@ public class SimpleActionBar extends RelativeLayout
 		{
 			if (txtTitle == null)
 			{
-				txtTitle = new TextView(getContext());
+				txtTitle = new TextView(getContext(), null, android.R.style.Widget_TextView);
 				BarMid.addView(txtTitle, 0, new ViewGroup.LayoutParams(
 						LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 			}

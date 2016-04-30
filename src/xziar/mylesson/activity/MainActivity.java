@@ -31,6 +31,7 @@ public class MainActivity extends Activity
 {
 	private final static int REQUESTCODE_Add = 1;
 	private final static int REQUESTCODE_Mod = 2;
+	private final static int REQUESTCODE_SETTINGS = 3;
 	public final static int RETCODE_Del = 2;
 	private static Context context = null;
 	private LessonView lview = null;
@@ -107,7 +108,9 @@ public class MainActivity extends Activity
 
 	public void onBtnSetting(View view)
 	{
-
+		Intent it = new Intent();
+		it.setClass(this, SettingsActivity.class);
+		startActivityForResult(it, REQUESTCODE_SETTINGS);
 	}
 
 	private void LessonDetail(final LessonBean lb)
@@ -172,6 +175,8 @@ public class MainActivity extends Activity
 				lb = (LessonBean) data.getSerializableExtra("LessonBean");
 				DBUtil.delete(lb);
 				DBUtil.add(lb);
+				break;
+			case REQUESTCODE_SETTINGS:
 				break;
 			}
 			lview.setData(DBUtil.query());

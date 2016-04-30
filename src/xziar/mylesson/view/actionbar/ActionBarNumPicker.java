@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -37,6 +36,7 @@ public class ActionBarNumPicker extends TextView
 				R.styleable.ActionBarNumPicker);
 		minVal = ta.getInt(R.styleable.ActionBarNumPicker_minVal, 0);
 		maxVal = ta.getInt(R.styleable.ActionBarNumPicker_maxVal, 0);
+		ta.recycle();
 		init(context);
 	}
 
@@ -53,12 +53,10 @@ public class ActionBarNumPicker extends TextView
 
 	private void init(Context context)
 	{
-		View cont = LayoutInflater.from(context)
-				.inflate(R.layout.popup_week_choose, null);
-		np = (NumberPickerEx) cont.findViewById(R.id.npWeek);
+		np = new NumberPickerEx(context);
 		np.setMaxValue(maxVal);
 		np.setMinValue(minVal);
-		pop = new PopupWindow(cont, LayoutParams.WRAP_CONTENT,
+		pop = new PopupWindow(np, LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
 		pop.setOutsideTouchable(true);
 		pop.setBackgroundDrawable(new ColorDrawable(0xe0c0c0c0));
