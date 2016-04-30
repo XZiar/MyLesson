@@ -1,5 +1,7 @@
 package xziar.mylesson.activity;
 
+import java.util.Calendar;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +21,8 @@ import xziar.mylesson.R;
 import xziar.mylesson.data.DBUtil;
 import xziar.mylesson.data.LessonBean;
 import xziar.mylesson.util.SizeUtil;
+import xziar.mylesson.view.actionbar.ActionBarNumPicker;
+import xziar.mylesson.view.actionbar.ActionBarNumPicker.OnValueChangeListener;
 import xziar.mylesson.view.lessonview.LessonBlock;
 import xziar.mylesson.view.lessonview.LessonView;
 import xziar.mylesson.view.lessonview.LessonView.OnChooseItemListener;
@@ -30,9 +34,12 @@ public class MainActivity extends Activity
 	public final static int RETCODE_Del = 2;
 	private static Context context = null;
 	private LessonView lview = null;
+	private ActionBarNumPicker abNP = null;
 	private PopupWindow pop = null;
 	private TextView popTxtLN, popTxtTN, popTxtWeek, popTxtTP;
 	private Button popBtnMod, popBtnDel;
+	private Calendar cal = Calendar.getInstance();
+	private int curWeek = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -43,6 +50,7 @@ public class MainActivity extends Activity
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 		lview = (LessonView) findViewById(R.id.lv);
+		abNP = (ActionBarNumPicker) findViewById(R.id.npWeek);
 		{
 			View cont = LayoutInflater.from(context)
 					.inflate(R.layout.popup_lesson_detail, null);
@@ -61,14 +69,24 @@ public class MainActivity extends Activity
 			popBtnDel = (Button) cont.findViewById(R.id.btn_del);
 		}
 		DBUtil.onInit(getFilesDir());
-
+		cal.set(2016, Calendar.MARCH, 1);
 		lview.setData(DBUtil.query());
+		lview.setWeek(cal, curWeek);
 		lview.SetOnChooseItemListener(new OnChooseItemListener()
 		{
 			@Override
 			public void onChoose(LessonBlock lb)
 			{
 				LessonDetail((LessonBean) lb);
+			}
+		});
+		abNP.setOnValChange(new OnValueChangeListener()
+		{
+			@Override
+			public void onValueChange(int val)
+			{
+				Log.v("tester", "valChg:"+cal.getTime()+",week:"+val);
+				lview.setWeek(cal, val);
 			}
 		});
 	}
@@ -99,7 +117,8 @@ public class MainActivity extends Activity
 		popTxtTN.setText(lb.teacher);
 		popTxtWeek
 				.setText(lb.weekFrom + "-" + lb.weekTo + "周，每周" + lb.timeWeek);
-		popTxtTP.setText(lb.timeFrom + "-" + lb.timeLast + "," + lb.place);
+		popTxtTP.setText((lb.timeFrom + 1) + "-" + (lb.timeFrom + lb.timeLast)
+				+ "节课," + lb.place);
 		popBtnMod.setOnClickListener(new OnClickListener()
 		{
 			@Override

@@ -12,9 +12,17 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:padding="5dp"
-        actbar:separator="false"
-        actbar:title="星期A">
+        actbar:separator="false">
 
+        <xziar.mylesson.view.actionbar.ActionBarNumPicker
+            android:id="@+id/npWeek"
+            android:layout_width="wrap_content"
+        	android:layout_height="match_parent"
+        	android:text="第1周"
+        	actbar:align="middle"
+        	actbar:minVal="1"
+        	actbar:maxVal="18"/>
+        
         <xziar.mylesson.view.actionbar.ActionBarButton 
             android:layout_width="wrap_content"
         	android:layout_height="match_parent"

@@ -1,6 +1,7 @@
 package xziar.mylesson.view.lessonview;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -39,6 +40,7 @@ public class LessonView extends ViewGroup
 	private boolean isTTV = false, isMoved = false;
 	private ArrayList<String> weekdays = new ArrayList<>();
 	private int blkSize = 56;
+	private Calendar curWeek;
 
 	public LessonView(Context context)
 	{
@@ -105,6 +107,18 @@ public class LessonView extends ViewGroup
 		postInvalidate();
 	}
 
+	public void setWeek(Calendar begin, int week)
+	{
+		curWeek = (Calendar) begin.clone();
+		Log.v("tester", "clone:"+curWeek.getTime());
+		curWeek.add(Calendar.DATE, (week - 1) * 7);
+		curWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+		Log.v("tester", "new:"+curWeek.getTime());
+		colH.setCurweek(curWeek.getTime());
+		ttv.setCurWeek(week);
+		invalidate();
+	}
+	
 	private boolean scrollElement(int dx, int dy)
 	{
 		lastX = moveX;
@@ -173,7 +187,7 @@ public class LessonView extends ViewGroup
 	@Override
 	protected void dispatchDraw(Canvas canvas)
 	{
-		Log.v("tester", "LessonView dispatchDraw");
+		//Log.v("tester", "LessonView dispatchDraw");
 
 		canvas.save();
 		canvas.clipRect(rectTTV);
@@ -257,8 +271,6 @@ public class LessonView extends ViewGroup
 				break;
 			else if (Math.abs(dx) + Math.abs(dy) > dDis)
 				isMoved = true;
-			// Log.v("tester", "Touch_Move " + dx + "," + dy);
-
 			if (scrollElement(dx, dy))
 				invalidate();
 			break;
