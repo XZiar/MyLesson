@@ -2,18 +2,25 @@ package xziar.mylesson.view.actionbar;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import xziar.mylesson.R;
 import xziar.mylesson.util.SizeUtil;
 
 public class SimpleActionBar extends RelativeLayout
 {
 	private LinearLayout BarLeft, BarMid, BarRight;
+	protected Paint paintLine = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private int pad = SizeUtil.dp2px(5);
+	private boolean isSeparator = true;
 
 	public SimpleActionBar(Context context)
 	{
@@ -26,8 +33,9 @@ public class SimpleActionBar extends RelativeLayout
 	{
 		super(context, attrs, defStyleAttr);
 		TypedArray ta = context.obtainStyledAttributes(attrs,
-				new int[] { android.R.attr.layout_margin });
-		pad = ta.getDimensionPixelSize(0, 1);
+				new int[] { android.R.attr.padding, R.attr.separator });
+		pad = ta.getDimensionPixelSize(0, 0);
+		isSeparator = ta.getBoolean(1, true);
 		ta.recycle();
 		init(context);
 	}
@@ -57,6 +65,9 @@ public class SimpleActionBar extends RelativeLayout
 		parmM.addRule(RelativeLayout.CENTER_IN_PARENT);
 		super.addView(BarMid, -1, parmM);
 
+		paintLine.setColor(Color.GRAY);
+		paintLine.setStrokeWidth(2.0f);
+		paintLine.setStyle(Style.STROKE);
 		Log.v("tester", "ActBar from ctx:" + context.getClass().getName());
 	}
 
@@ -76,7 +87,7 @@ public class SimpleActionBar extends RelativeLayout
 		}
 		if (!isAdd)
 			return;
-		
+
 		ActionBarElement abe = (ActionBarElement) child;
 		child.setPaddingRelative(pad, 0, pad, 0);
 		switch (abe.getAlign())
@@ -90,6 +101,33 @@ public class SimpleActionBar extends RelativeLayout
 		case right:
 			BarRight.addView(child, 0, params);
 			break;
+		}
+	}
+
+	
+	
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
+	{
+		int height = heightMeasureSpec;
+		if (isSeparator)
+		{
+			height = MeasureSpec.makeMeasureSpec(
+					2 + MeasureSpec.getSize(heightMeasureSpec),
+					MeasureSpec.getMode(heightMeasureSpec));
+		}
+		super.onMeasure(widthMeasureSpec, height);
+	}
+
+	@Override
+	protected void dispatchDraw(Canvas canvas)
+	{
+		super.dispatchDraw(canvas);
+		if (isSeparator)
+		{
+			int y = getBottom() - 1;
+			Log.v("tester", "actBar draw,btm="+getBottom()+"y="+y);
+			canvas.drawLine(0, y, canvas.getWidth(), y, paintLine);
 		}
 	}
 

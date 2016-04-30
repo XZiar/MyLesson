@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,8 +19,8 @@ import xziar.mylesson.view.lessonview.LessonView.OnChooseItemListener;
 
 public class MainActivity extends Activity
 {
+	private final static int REQUESTCODE_Add = 1;
 	private static Context context = null;
-
 	private LessonView lview = null;
 
 	@Override
@@ -34,22 +35,8 @@ public class MainActivity extends Activity
 		lview = (LessonView) findViewById(R.id.lv);
 
 		DBUtil.onInit(getFilesDir());
-		for (int a = 0; a < 7; a++)
-		{
-			for (int b = 0; b < 12; b += 4)
-			{
-				LessonBean lb = new LessonBean();
-				lb.timeWeek = a;
-				lb.timeFrom = b;
-				lb.timeLast = 3;
-				lb.lessonName = "手机软件开发";
-				lb.place = a + "楼" + b + "室";
-				lb.color = 0xff40b060;
-				DBUtil.add(lb);
-			}
-		}
+		
 		lview.setData(DBUtil.query());
-
 		lview.SetOnChooseItemListener(new OnChooseItemListener()
 		{
 			@Override
@@ -70,22 +57,9 @@ public class MainActivity extends Activity
 
 	public void onBtnAdd(View view)
 	{
-		AlertDialog.Builder builder = new AlertDialog.Builder(
-				MainActivity.this);
-		builder.setMessage("Add Lesson").setPositiveButton("确定",
-				new DialogInterface.OnClickListener()
-				{
-					public void onClick(DialogInterface arg0, int arg1)
-					{
-					}
-				});
-		// 透明
-		final AlertDialog dlg = builder.create();
-		Window window = dlg.getWindow();
-		WindowManager.LayoutParams lp = window.getAttributes();
-		lp.alpha = 0.9f;
-		window.setAttributes(lp);
-		dlg.show();
+		Intent it = new Intent();
+		it.setClass(this, AddLessonActivity.class);
+		startActivityForResult(it, REQUESTCODE_Add);
 	}
 
 	public void onBtnSetting(View view)
@@ -106,6 +80,24 @@ public class MainActivity extends Activity
 		lp.alpha = 0.9f;
 		window.setAttributes(lp);
 		dlg.show();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode,
+			Intent data)
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+		if(resultCode == RESULT_OK)
+		{
+			switch(requestCode)
+			{
+			case REQUESTCODE_Add:
+				LessonBean lb = (LessonBean) data.getSerializableExtra("LessonBean");
+				DBUtil.add(lb);
+				lview.setData(DBUtil.query());
+				break;
+			}
+		}
 	}
 
 	public static Context getContext()

@@ -1,12 +1,17 @@
 package xziar.mylesson.data;
 
+import java.io.Serializable;
+
 import xziar.mylesson.view.lessonview.LessonBlock;
 
-public class LessonBean implements LessonBlock
+public class LessonBean implements LessonBlock, Serializable
 {
+	private static final long serialVersionUID = 509138607467911125L;
+	
 	public int LID = -1;
 	public String lessonName = "";
 	public String place = "";
+	public String teacher = "";
 	public int timeFrom, timeLast, timeWeek, weekFrom, weekTo;
 	public int color = 0xff444444;
 
@@ -31,7 +36,7 @@ public class LessonBean implements LessonBlock
 	@Override
 	public int getTime()
 	{
-		return timeFrom;
+		return timeFrom - 1;
 	}
 
 	@Override
@@ -43,7 +48,7 @@ public class LessonBean implements LessonBlock
 	@Override
 	public int getWeekDay()
 	{
-		return timeWeek;
+		return timeWeek - 1;
 	}
 
 	@Override

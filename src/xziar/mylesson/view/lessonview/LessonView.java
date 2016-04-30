@@ -5,16 +5,20 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import xziar.mylesson.R;
 import xziar.mylesson.data.LessonBean;
 import xziar.mylesson.util.SizeUtil;
 import xziar.mylesson.view.lessonview.TimeTableView.OnChooseListener;
@@ -27,13 +31,13 @@ public class LessonView extends ViewGroup
 	protected Paint paintLine = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private OnChooseItemListener OnChooseItem = null;
 
-	int bgColor = 0xfff7f7f7;
 	private Rect rectRH = new Rect(), rectCH = new Rect(), rectTTV = new Rect();
 	private Rect loRH = new Rect(), loCH = new Rect(), loTTV = new Rect();
 	private int offsetX = 0, offsetY = 0, moveX = -1, moveY = -1, lastX, lastY;
 	private int locTX, locTY, maxDX, maxDY, dDis;
 	private boolean isTTV = false, isMoved = false;
 	private View objTouch;
+	private int blkSize = 56;
 
 	public LessonView(Context context)
 	{
@@ -49,12 +53,15 @@ public class LessonView extends ViewGroup
 	public LessonView(Context context, AttributeSet attrs, int defStyleAttr)
 	{
 		super(context, attrs, defStyleAttr);
+		TypedArray ta = context.obtainStyledAttributes(attrs,
+				R.styleable.LessonView);
+		blkSize = ta.getInt(R.styleable.LessonView_blkSize, 56);
+		ta.recycle();
 		init(context);
 	}
 
 	private void init(Context context)
 	{
-		final int blkSize = 56;
 		dDis = SizeUtil.dp2px(blkSize) / 10;
 		rowH = new RowHeaders(context, 38, blkSize);
 		colH = new ColumnHeaders(context, blkSize, 44);
@@ -63,7 +70,12 @@ public class LessonView extends ViewGroup
 		paintLine.setColor(Color.GRAY);
 		paintLine.setStrokeWidth(2.0f);
 		paintLine.setStyle(Style.STROKE);
-		
+
+		if (getBackground() == null)
+			setBackground(new ColorDrawable(0xffdde2e7));
+		else
+			setBackground(getBackground());
+
 		ttv.setChooseListener(new OnChooseListener()
 		{
 			@Override
@@ -73,19 +85,20 @@ public class LessonView extends ViewGroup
 			}
 		});
 	}
+
 	public void setData(LessonBean[] lbs)
 	{
 		List<LessonBlock> ls = new ArrayList<>();
-		if(lbs != null)
+		if (lbs != null)
 		{
-			for(LessonBean lb : lbs)
+			for (LessonBean lb : lbs)
 				ls.add(lb);
 		}
-		Log.v("tester", "setData:"+ls.size());
+		Log.v("tester", "setData:" + ls.size());
 		ttv.setLessons(ls);
 		postInvalidate();
 	}
-	
+
 	private boolean scrollElement(int dx, int dy)
 	{
 		lastX = moveX;
@@ -154,7 +167,7 @@ public class LessonView extends ViewGroup
 	@Override
 	protected void dispatchDraw(Canvas canvas)
 	{
-		// Log.v("tester", "LessonView dispatchDraw");
+		Log.v("tester", "LessonView dispatchDraw");
 
 		canvas.save();
 		canvas.clipRect(rectTTV);
@@ -174,11 +187,7 @@ public class LessonView extends ViewGroup
 		colH.draw(canvas);
 		canvas.restore();
 
-		// draw self
-		canvas.save();
-		canvas.clipRect(0, 0, rectRH.right, rectCH.bottom);
-		canvas.drawColor(bgColor);
-		canvas.restore();
+		//draw seperator
 		canvas.drawLine(0, loCH.bottom, canvas.getWidth(), loCH.bottom,
 				paintLine);
 	}
@@ -238,7 +247,7 @@ public class LessonView extends ViewGroup
 				break;
 			else if (Math.abs(dx) + Math.abs(dy) > dDis)
 				isMoved = true;
-			//Log.v("tester", "Touch_Move " + dx + "," + dy);
+			// Log.v("tester", "Touch_Move " + dx + "," + dy);
 
 			if (scrollElement(dx, dy))
 				invalidate();
@@ -252,14 +261,23 @@ public class LessonView extends ViewGroup
 		return true;
 	}
 
-	
 	public interface OnChooseItemListener
 	{
 		public void onChoose(LessonBlock lb);
 	}
+
 	public void SetOnChooseItemListener(OnChooseItemListener chooseListener)
 	{
 		this.OnChooseItem = chooseListener;
 	}
-	
+
+	@Override
+	public void setBackground(Drawable bg)
+	{
+		if (ttv != null)
+			ttv.setBackground(bg);
+		if (rowH != null)
+			rowH.setBackground(bg);
+		postInvalidate();
+	}
 }

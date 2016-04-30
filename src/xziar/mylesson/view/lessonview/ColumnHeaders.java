@@ -29,7 +29,6 @@ public class ColumnHeaders extends View implements OnTouchListener
 	protected Canvas bufCV = null;
 	
 	private boolean isReBuf = true;
-	int bgColor = 0xfff7f7f7;
 	private int viewWidth, viewHeight, width, height;// in px
 
 	/**
@@ -47,7 +46,7 @@ public class ColumnHeaders extends View implements OnTouchListener
 		super(context);
 		setLayerType(View.LAYER_TYPE_HARDWARE, null);
 		setOnTouchListener(this);
-
+		
 		this.width = SizeUtil.dp2px(columnWidth) + 1;
 		viewHeight = this.height = SizeUtil.dp2px(height);
 		viewWidth = this.width * 7;
@@ -79,7 +78,6 @@ public class ColumnHeaders extends View implements OnTouchListener
 		
 		Log.v("tester", "colH bufDraw HW:" + bufCV.isHardwareAccelerated());
 		bufCV.clipRect(0, 0, viewWidth, viewHeight);
-		bufCV.drawColor(bgColor);
 
 		FontMetricsInt fontMetrics = paintDay.getFontMetricsInt();
 		float baselineDay = (height * 3 / 5 - fontMetrics.top - fontMetrics.bottom)
