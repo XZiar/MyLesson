@@ -89,8 +89,8 @@
         <xziar.mylesson.view.InputBlock
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            actbar:ico="@drawable/icon_time"
-            android:padding="8dp" >
+            android:padding="8dp"
+            actbar:ico="@drawable/icon_time">
 
             <xziar.mylesson.view.FromToPicker
                 android:id="@+id/npTime"

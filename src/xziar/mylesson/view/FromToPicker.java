@@ -2,7 +2,6 @@ package xziar.mylesson.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.widget.LinearLayout;
@@ -66,7 +65,6 @@ public class FromToPicker extends LinearLayout
 		tvE = new TextView(context);
 		tvE.setText(txtE);
 
-		int npWidth = 2 * (int) new Paint().measureText(maxVal + " ");
 		LinearLayout.LayoutParams lpnp = new LinearLayout.LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
 		LinearLayout.LayoutParams lptv = new LinearLayout.LayoutParams(

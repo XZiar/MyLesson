@@ -1,12 +1,10 @@
 package xziar.mylesson.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import xziar.mylesson.R;
 import xziar.mylesson.data.LessonBean;
@@ -47,25 +45,16 @@ public class AddLessonActivity extends Activity
 		lb.timeFrom = npTime.getFromVal();
 		lb.timeLast = npTime.getToVal() - lb.timeFrom;
 		lb.timeWeek = npWeekTime.getValue() + 1;
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("confirm").setPositiveButton("È·¶¨",
-				new DialogInterface.OnClickListener()
-				{
-					public void onClick(DialogInterface arg0, int arg1)
-					{
-					}
-				});
-		// Í¸Ã÷
-		final AlertDialog dlg = builder.create();
-		Window window = dlg.getWindow();
-		WindowManager.LayoutParams lp = window.getAttributes();
-		lp.alpha = 0.9f;
-		window.setAttributes(lp);
-		dlg.show();
+		lb.color = 0xff40b060;
+		Intent intent = new Intent();
+		intent.putExtra("LessonBean", lb);
+		setResult(RESULT_OK, intent);
+		finish();
 	}
 
 	public void onBtnClose(View view)
 	{
+		setResult(RESULT_CANCELED, null);
 		finish();
 	}
 

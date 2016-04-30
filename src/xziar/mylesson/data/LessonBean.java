@@ -1,9 +1,13 @@
 package xziar.mylesson.data;
 
+import java.io.Serializable;
+
 import xziar.mylesson.view.lessonview.LessonBlock;
 
-public class LessonBean implements LessonBlock
+public class LessonBean implements LessonBlock, Serializable
 {
+	private static final long serialVersionUID = 509138607467911125L;
+	
 	public int LID = -1;
 	public String lessonName = "";
 	public String place = "";
